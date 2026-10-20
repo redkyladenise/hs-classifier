@@ -66,3 +66,27 @@
   - `ok`: 16,757,162 descriptions (99.9984%).
   - `placeholder`: 2 descriptions (0.0000%).
   - `blank`: 274 descriptions (0.0016%, consisting of empty strings, pure symbols, or digit-only entries).
+  
+
+## Track A6: Chapter Scope Selection & Dataset Cleaning
+
+### 1. Chapter Ranking Rule & Scope Criteria
+- **Ranking Metric:** Distinct normalized descriptions (`desc_norm_id`) declared under each chapter (`ch2`) across 2023–2025 among valid transactions (`code_flag == 'valid'` and `desc_status == 'ok'`). 
+- **Counting Policy:** A description counts once for every chapter it appears under. Distinct counts are evaluated globally per chapter across 2023–2025; yearly distinct counts are never summed.
+- **Top-N Selection:** Select the top five chapters ranked by unique normalized descriptions.
+- **Coverage Threshold:** Set a defensible cumulative transaction coverage threshold of **50.0%** of all valid transactions. If the top five chapters cover less than 50.0% of valid transactions, add the next-highest-ranked chapters one at a time up to a hard ceiling of eight chapters.
+- **Cross-Chapter Descriptions:** If a `desc_norm_id` appears across both chosen and unchosen chapters, only rows mapped to in-scope chapters are retained in `transactions_scope.parquet`. The count of cross-chapter descriptions is logged in pipeline reports.
+
+### 2. Low-Memory Chunked Join Architecture
+- `transactions_clean.parquet` is constructed by partitioning `transactions_slim` across 16 hash buckets (`abs(hash(goods_description)) % 16`).
+- For each bucket, `codes_standardized` is joined on `row_id`, and `raw_to_norm` is joined on text within that hash partition. All raw text is dropped to produce a compact, memory-safe integer schema (`row_id`, `year`, `month`, `desc_norm_id`, `norm_bucket`, `desc_status`, `code_flag`, `ch2`, `hd4`, `sh6`, `ahtn8`, `ends_00`).
+### 3. Track A6 Results & Selected Chapters
+- **Selected Chapters Count:** 5
+- **Selected Chapters:** 84, 85, 39, 73, 87
+- **Official Tariff Book Chapter Headings:**
+  - **Chapter 84**: Nuclear reactors, boilers, machinery and mechanical appliances; parts thereof (3,920,818 tx, 2,562,757 unique desc, rank #1)
+  - **Chapter 85**: Electrical machinery and equipment and parts thereof; sound and television recorders (4,343,029 tx, 2,263,559 unique desc, rank #2)
+  - **Chapter 39**: Plastics and articles thereof (1,855,296 tx, 1,120,376 unique desc, rank #3)
+  - **Chapter 73**: Articles of iron or steel (1,678,925 tx, 1,078,611 unique desc, rank #4)
+  - **Chapter 87**: Vehicles other than railway or tramway rolling-stock, and parts and accessories thereof (1,711,155 tx, 957,460 unique desc, rank #5)
+- **Cross-Scope Descriptions:** 63,713 normalized descriptions appeared in both chosen and unchosen chapters. For modeling, only transaction rows under chosen chapters are retained in `transactions_scope.parquet`.
