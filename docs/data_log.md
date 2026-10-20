@@ -1,55 +1,113 @@
-# Data Log
+# Data Log & Provenance
 
-## Project Specifications
-- Task/objective: HS Classifier using BOC 2023-2024 import records. Windows 11, 8 GB RAM
-- Classification levels: 2 to 8 digit 
-- Data source: Open Customs Data from BetterGov.ph
-- Evaluation requirements: [From 0.1]
+## 1. Project Specifications
 
-## Raw Files
+- **Objective:** Develop an HS Code classifier using BOC import records.
+- **Data source:** Bureau of Customs (BOC) import declarations, obtained through BetterGov.PH / Open Customs Data.
+- **Source repository:** [Hugging Face — bettergovph/open-customs-data](https://huggingface.co/datasets/bettergovph/open-customs-data)
+- **Years covered:** 2023–2025
+- **Classification levels:** 2–8 digits
+- **Environment:** Windows 11, 8 GB RAM
+- **Evaluation requirements:** Refer to Track 0.1.
+- **File format:** Parquet; CSV source files excluded per project rules.
 
-| Filename | Size (bytes) | Size (MB) |
-|---|---:|---:|
-| 2023.parquet | 735,684,212 | 701.56 |
-| 2024.parquet | 762,909,055 | 727.45 |
-| 2025.parquet | 799,659,139 | 762.37 |
+## 2. Raw Dataset Inventory
 
-Checksums and license: To be documented in A1.
+- **Storage location:** `data/raw/`
+- **Source repository:** [Hugging Face — bettergovph/open-customs-data](https://huggingface.co/datasets/bettergovph/open-customs-data)
+- **Download date:** 10-20-2026
+- **Dataset revision:** Updated 9 months ago.
 
-## HSCODE Stored Data Types
-- 2023: BIGINT
-- 2024: BIGINT
-- 2025: BIGINT
+| File | Size (Bytes) | Size (MB) | SHA-256 Checksum |
+|---|---:|---:|---|
+| `2023.parquet` | 735,684,212 | 701.56 | 042094f8e98bb88d1ad5889cb53060d98b287f064ddedb12a3c95fc9089826b1 |
+| `2024.parquet` | 762,909,055 | 727.45 | b7125910a025d0a615d0fa96aecf3bc90cb72b58103d039cf4702f08ff479626 |
+| `2025.parquet` | 799,659,139 | 762.37 | be8cf3353682243db488ce4b488d045843ca677c07c1a3f541a460c49c829a9d |
 
-## 0.12 Memory Stress Test — 2026-10-20
+- **Raw data handling:** Raw Parquet files were read without intentional modification.
 
-**Input data:** `data/raw/2023.parquet`, `data/raw/2024.parquet`, `data/raw/2025.parquet`
+## 3. Data Characteristics and Identified Issues
 
-**Environment:** Python 3.14.3; DuckDB 1.5.6; available RAM before individual-year tests: 3.82–3.84 GB.
+### 3.1 Required fields
 
-**DuckDB settings:** Memory limit = 0.6 GB (572.2 MiB applied); threads = 1; insertion-order preservation disabled.
+The environment check confirmed that all three files contain:
+
+- `HSCODE`
+- `GOODSDESCRIPTION`
+- `year`
+- `month`
+
+### 3.2 HS code storage
+
+| Year | Stored type |
+|---|---|
+| 2023 | `BIGINT` |
+| 2024 | `BIGINT` |
+| 2025 | `BIGINT` |
+
+- HS codes contain 10- and 11-digit values in the inspected data.
+- Numeric storage cannot preserve leading zeros. During preprocessing, HS codes must be converted to strings and normalized according to the intended classification level.
+- The original code representation and any leading-zero recovery assumptions should be documented and validated.
+
+### 3.3 Record identification
+- No `uid` column was found.
+- A deterministic surrogate `row_id` may be generated using the configured format: `{year}-{row_position:08d}`.
+- Row position must be assigned consistently during extraction to maintain traceability to the source records.
+
+## 4. License and Provenance Status
+- **License status:** Unresolved.
+- **Current finding:** Explicit open-license terms have not yet been verified for the downloaded dataset.
+- **Pending actions:** Confirm the dataset's applicable license or obtain clarification from the maintainers.
+- **Release consideration:** Resolve licensing requirements before publicly distributing the dataset, derived files, or a deployed demonstration.
+
+## 5. Memory Stress Test
+
+**Date:** 2026-10-20
+
+### Environment and configuration
+
+- Python 3.14.3 (64-bit)
+- DuckDB 1.5.6
+- Available RAM before individual-year tests: 3.82–3.84 GB
+- DuckDB memory limit: 0.6 GB (approximately 572.2 MiB)
+- Threads: 1
+- Insertion-order preservation: Disabled
+
+**Input files:** `data/raw/2023.parquet`, `data/raw/2024.parquet`, `data/raw/2025.parquet`
 
 ### Query A — Count distinct goods descriptions
 
-| Dataset | Distinct descriptions | Elapsed time | Peak Python-process memory | Lowest available RAM |
+| Dataset | Distinct descriptions | Runtime | Peak process memory | Lowest available RAM |
 |---|---:|---:|---:|---:|
 | 2023 | 5,617,466 | 0.10 min | 590.6 MB | 3.14 GB |
 | 2024 | 5,958,882 | 0.13 min | 620.5 MB | 2.92 GB |
 | 2025 | 6,217,526 | 0.12 min | 631.4 MB | 2.96 GB |
-| All years | Failed with `DuckDB OutOfMemoryException` | Not recorded | Not recorded | Not recorded |
+| All years | Failed: `DuckDB OutOfMemoryException` | Not recorded | Not recorded | Not recorded |
 
 ### Query B — Count rows by HSCODE digit length
 
-| Dataset | 10-digit codes | 11-digit codes | Elapsed time |
+| Dataset | 10-digit codes | 11-digit codes | Runtime |
 |---|---:|---:|---:|
 | 2023 | 114,774 | 8,352,315 | 0.01 min |
 | 2024 | 130,375 | 8,861,762 | 0.01 min |
 | 2025 | 147,588 | 9,282,893 | 0.01 min |
 
-**Temporary storage:** The `data/interim/duckdb_tmp` directory measured 0.00 MB after each successful query. Peak temporary-disk usage was not measured.
+### Results and decision
 
-**Outcome:** Individual-year tests passed the proposed time and available-RAM criteria. The combined all-years distinct-description query failed at approximately 572.0 MiB / 572.2 MiB of DuckDB memory.
+- Both queries completed successfully when run separately for each year.
+- The all-years distinct-description query exceeded DuckDB's configured memory limit of approximately 572 MiB.
+- The lowest observed free system RAM during individual-year Query A runs was 2.92 GB.
+- The temporary directory measured 0 MB after successful queries; peak temporary-disk usage was not measured.
 
-**Data handling:** Raw Parquet files were read without intentional modification.
+**Decision:** Borderline overall under the predefined criteria. Use per-year or partitioned processing for memory-intensive operations. Monitor resource usage during subsequent preprocessing and model training.
 
-**Next action:** Use per-year or partitioned processing for memory-intensive operations and monitor resource usage during A3–A9.
+## 6. Pending Verification and Actions
+
+- [ ] Record the actual download date and source revision.
+- [ ] Calculate SHA-256 checksums for all raw Parquet files.
+- [ ] Verify the applicable dataset license.
+- [ ] Validate HS code formatting and leading-zero handling.
+- [ ] Implement and verify deterministic row ID generation.
+- [ ] Standardize year-specific schemas during preprocessing.
+- [ ] Monitor memory and temporary-disk usage during later processing stages.
+- [ ] Keep raw data unchanged and exclude data files from Git commits.
