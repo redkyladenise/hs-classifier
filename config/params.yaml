@@ -34,6 +34,18 @@ allowed_symbols:
   - "%"
   - "+"
 
+norm_buckets: 16
+chunk_size: 500000
+
+placeholders:
+  - "n/a"
+  - "na"
+  - "none"
+  - "nil"
+  - "null"
+  - "as per invoice"
+  - "to follow"
+
 placeholder_descriptions: []
 
 source_columns:
@@ -53,7 +65,6 @@ paths:
 duckdb_memory_limit_gb: 0.6
 duckdb_threads: 1
 duckdb_temp_dir: data/interim/duckdb_tmp
-chunk_size: 100000
 
 training_cap_rule: null
 training_cap_per_code: null

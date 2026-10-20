@@ -53,3 +53,16 @@
   - Zero rows flagged as `bad_format`, `odd_length`, or `bad_chapter`.
   - Fix breakdown: 98.54% `trim_extra` (11 digits -> 8 digits + 3 digits in `hs_extra`), 1.46% `left_pad` (10 digits with dropped leading zero -> padded to 11 digits -> 8 digits + 3 digits in `hs_extra`).
   - Total output row counts preserved: 2023 = 8,467,089; 2024 = 8,992,137; 2025 = 9,430,481 (Total: 26,889,707).
+
+
+## Track A5: Goods Description Normalization
+
+- **Deduplication & Mapping:**
+  - Input: 16,757,438 distinct raw descriptions sourced directly from A3 bucket count tables (`data/interim/raw_desc_counts/part_*.parquet`).
+  - Output Mapping: `data/interim/raw_to_norm.parquet` retains the full 16,757,438 mappings.
+  - Normalized Dictionary: `data/interim/norm_descriptions.parquet` deduplicates into 15,869,694 unique normalized descriptions (reduction of 887,744 redundant variations).
+- **ID Strategy:** Generated stable 63-bit integers via `blake2b(digest_size=8) & 0x7FFFFFFFFFFFFFFF`. Audit verified zero hash collisions across all 16 norm buckets.
+- **Data Quality & Status Distribution:**
+  - `ok`: 16,757,162 descriptions (99.9984%).
+  - `placeholder`: 2 descriptions (0.0000%).
+  - `blank`: 274 descriptions (0.0016%, consisting of empty strings, pure symbols, or digit-only entries).
