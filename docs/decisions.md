@@ -43,3 +43,13 @@
 - **Bucket Count:** 16 buckets. No bucket exceeded memory or failed; doubling bucket count was unnecessary.
 - **Memory & Disk Usage:** Peak memory per bucket stayed well under the 0.6 GB ceiling. Each bucket file wrote cleanly to `data/interim/raw_desc_counts/`.
 - **Validation Outcome:** Sum of distinct counts equals 16,757,438, satisfying the bounds $\max(\text{yearly}) \le \text{total} \le \sum(\text{yearly})$.
+
+## Track A4: HS Code Standardization
+
+- **Strategy:** Built an intermediate lookup table `data/interim/code_map.parquet` mapping distinct original codes to standardized fields (`ahtn8`, `sh6`, `hd4`, `ch2`, `hs_extra`, `code_fix`, `code_flag`, `ends_00`, `right_padded`). This was joined back to `transactions_slim.parquet` in yearly streaming passes.
+- **Memory Compliance:** Avoided executing Python row-by-row on 26.89M records. Peak memory remained well below 0.6 GB RAM.
+- **Data Quality & Findings:**
+  - 100% of rows (26,889,707) mapped to `valid` codes.
+  - Zero rows flagged as `bad_format`, `odd_length`, or `bad_chapter`.
+  - Fix breakdown: 98.54% `trim_extra` (11 digits -> 8 digits + 3 digits in `hs_extra`), 1.46% `left_pad` (10 digits with dropped leading zero -> padded to 11 digits -> 8 digits + 3 digits in `hs_extra`).
+  - Total output row counts preserved: 2023 = 8,467,089; 2024 = 8,992,137; 2025 = 9,430,481 (Total: 26,889,707).
