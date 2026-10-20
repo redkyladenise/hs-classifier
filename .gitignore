@@ -1,0 +1,10 @@
+data/
+models/
+.venv/
+__pycache__/
+.ipynb_checkpoints/
+*.parquet
+*.csv
+.DS_Store
+.pytest_cache/
+*.egg-info/
