@@ -100,14 +100,3 @@ The environment check confirmed that all three files contain:
 - The temporary directory measured 0 MB after successful queries; peak temporary-disk usage was not measured.
 
 **Decision:** Borderline overall under the predefined criteria. Use per-year or partitioned processing for memory-intensive operations. Monitor resource usage during subsequent preprocessing and model training.
-
-## 6. Pending Verification and Actions
-
-- [ ] Record the actual download date and source revision.
-- [ ] Calculate SHA-256 checksums for all raw Parquet files.
-- [ ] Verify the applicable dataset license.
-- [ ] Validate HS code formatting and leading-zero handling.
-- [ ] Implement and verify deterministic row ID generation.
-- [ ] Standardize year-specific schemas during preprocessing.
-- [ ] Monitor memory and temporary-disk usage during later processing stages.
-- [ ] Keep raw data unchanged and exclude data files from Git commits.

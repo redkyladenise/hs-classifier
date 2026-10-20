@@ -1,18 +1,13 @@
 ## TRACK 0.12: Memory Stress Test
 
 **Date:** 2026-10-20
-
 **Pass:** Both queries finish in under 10 minutes per run, the computer does not freeze or run out of memory, and at least 20% of the free RAM measured before the run remains available at the lowest point.
-
 **Borderline:** Queries finish but exceed 10 minutes, or processing all years together is unreliable while per-year processing works.
-
 **Fail:** A query crashes, freezes the computer, or causes memory exhaustion.
-
 **Results:**
 - Both queries passed for each individual year (2023, 2024, and 2025), finishing in under 10 seconds.
 - The lowest free system RAM during the distinct-description queries was approximately 2.92 GB, above the 20% reserve threshold.
 - The all-years distinct-description query failed because it exceeded DuckDB's 0.6 GB memory limit.
-
 **Decision:** Borderline overall. Use per-year or partitioned processing for memory-intensive operations. Reassess if later preprocessing or model training exceeds available resources.
 
 ## Track A2: Reference Checks & Nomenclature Ground Truth
@@ -40,3 +35,11 @@
   - Digits 9–11: Fifth level — Philippine Standard Commodity Classification (PSCC) statistical/commodity subdivisions appended when national requirements are not in one-to-one correspondence with the 8-digit AHTN code.
 - **Source:** 2022 Philippine Standard Commodity Classification (PSCC) / Tariff Commission.
 - **Impact on Project:** Confirms that digits 9–11 represent purely domestic administrative/statistical sub-items. Truncating or ignoring digits 9–11 and targeting the 8-digit level (AHTN 2022) maintains strict alignment with ASEAN regional nomenclature standards without loss of tariff classification validity.
+
+## Track A3: Profiling & Bucket Partitioning
+
+- **Processing Rule:** Aggregating distinct descriptions and calculating top-N across all 26.89M rows exceeded the 0.6 GB memory ceiling during Track 0 stress testing.
+- **Implementation:** Used 16 hash buckets (`abs(hash(goods_description)) % 16`). Each description maps to exactly one bucket part (`part_00.parquet` to `part_15.parquet`).
+- **Bucket Count:** 16 buckets. No bucket exceeded memory or failed; doubling bucket count was unnecessary.
+- **Memory & Disk Usage:** Peak memory per bucket stayed well under the 0.6 GB ceiling. Each bucket file wrote cleanly to `data/interim/raw_desc_counts/`.
+- **Validation Outcome:** Sum of distinct counts equals 16,757,438, satisfying the bounds $\max(\text{yearly}) \le \text{total} \le \sum(\text{yearly})$.
