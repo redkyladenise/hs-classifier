@@ -63,3 +63,8 @@ training_cap_per_code: null
 split_strata: "majority_ahtn8"
 split_tolerance_group_pct: 0.5
 leakage_probe_sample: 2000
+
+training_cap_rule: "hierarchical_majority_desc_rank"
+training_cap_per_code: 200
+training_cap_ladder: [50000, 100000, 200000, 400000]
+leakage_probe_threshold_high: 0.05
