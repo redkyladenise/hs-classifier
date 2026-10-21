@@ -153,3 +153,33 @@ For any description (`group_l1`) evaluated in scenario test sets:
 - Checksums (SHA-256) are generated for `split_assignments.parquet` and `description_status.parquet` and recorded in `docs/split_manifest.md` and `data_log.md`.
 - Both artifacts are treated as immutable and read-only.
 - Cherry-picking via seed re-rolling is prohibited.
+
+## Track A9: Class Eligibility by Hierarchical Level
+
+- **Rule & Purpose:**
+  - Evaluated training description diversity across hierarchical levels (2, 4, 6, and 8) to establish which tariff lines have sufficient distinct training examples for supervised machine learning models to learn without rote memorization.
+  - Primary eligibility criterion: $\ge 20$ distinct Level-1 descriptions in training data (`eligible_at_20`).
+  - Sensitivity checks: tested $\ge 10$ (`eligible_at_10`) and $\ge 50$ (`eligible_at_50`) distinct descriptions.
+  - Ambiguity check: evaluated primary counts (`n_train_desc_any`) versus majority counts (`n_train_desc_majority`) to monitor inflation caused by the 20.39% multi-code transaction ambiguity.
+
+- **Empirical Eligibility & Coverage Findings:**
+  - **Main Scenario (2023–2024 Train Groups — used by `unseen` and `y2`):**
+    - **Chapter (2-digit):** 5/5 codes eligible (100.0% coverage).
+    - **Heading (4-digit):** 202/202 codes eligible (100.0% coverage).
+    - **Subheading (6-digit):** 1,083/1,184 codes eligible (91.47% of codes; **99.98% transaction coverage**). Only 3 codes shifted eligibility under majority counting.
+    - **Tariff Line (8-digit):** 2,522/3,351 codes eligible (75.26% of codes; **99.83% transaction coverage** and **99.85% unique description coverage**). Only 37 codes shifted eligibility under majority counting.
+  - **Y1 Scenario (2023 Train Groups only):**
+    - **8-digit:** 2,213/3,221 codes eligible (68.71% of codes; **99.56% transaction coverage**). 47 codes shifted under majority counting.
+
+- **Theoretical Accuracy Ceilings:**
+  - Established the mathematical upper bound for closed-set classifiers restricted to eligible classes:
+    - **`unseen` Test Scenario:** **99.83%** maximum reachable accuracy at 8 digits (100.0% at chapters and headings, 99.98% at subheadings).
+    - **`y2` Production Test Scenario (2025):** **99.83%** maximum reachable accuracy at 8 digits.
+    - **`y1` Test Scenario (2024):** **99.55%** maximum reachable accuracy at 8 digits.
+
+- **Excluded Codes Analysis:**
+  - In the `main` scenario, the 829 excluded 8-digit codes together account for less than **0.17%** of in-scope transactions.
+  - The single largest excluded code (`8456.40.10` — plasma arc machine tools) comprises only 1,254 transactions (0.0093% of in-scope volume). No other excluded code exceeds 0.0045% of volume.
+
+- **Decision & Downstream Policy:**
+  - Non-destructive execution: zero records or classes were dropped. Eligibility flags are stored in `data/processed/class_eligibility.parquet` for downstream filtering, fallback routing, or threshold calibration in Track C.
