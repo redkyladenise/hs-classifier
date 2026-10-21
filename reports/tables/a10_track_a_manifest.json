@@ -1,0 +1,74 @@
+[
+  {
+    "artifact": "data/interim/transactions_slim.parquet",
+    "rows": 26889707,
+    "size_mb": 451.23,
+    "sha256": "1ac9674445b1a9e67c1b131ebf5bf6b8d94e715221973ca4e51c9c265ab4d16a"
+  },
+  {
+    "artifact": "data/interim/raw_desc_counts",
+    "rows": 16757438,
+    "size_mb": 435.48,
+    "sha256": "6abbc5986a2947c8cc16453f34ff862a0f576c0ca07776c05591312c1698e9d2"
+  },
+  {
+    "artifact": "data/interim/code_map.parquet",
+    "rows": 11505,
+    "size_mb": 0.13,
+    "sha256": "812bee6f2df6c432da5bddb53b8e379832c8279a7b6f981e51d8e2e523e79e41"
+  },
+  {
+    "artifact": "data/interim/codes_standardized.parquet",
+    "rows": 26889707,
+    "size_mb": 558.25,
+    "sha256": "9330ad9595c237e7c995915329b1ce66a74fa5c107285c08f8e5502366988a09"
+  },
+  {
+    "artifact": "data/interim/raw_to_norm.parquet",
+    "rows": 16757438,
+    "size_mb": 974.99,
+    "sha256": "3aa1d65e9dd53e0e260493f0de3a9dc76820f0c7af10522abf96c8a622e153c0"
+  },
+  {
+    "artifact": "data/interim/norm_descriptions.parquet",
+    "rows": 15869694,
+    "size_mb": 551.28,
+    "sha256": "9fe8e9f11d272fd9587922b23cc10567b8e10815b4b0a5bf062d6e179455de49"
+  },
+  {
+    "artifact": "data/processed/unique_descriptions.parquet",
+    "rows": 7925933,
+    "size_mb": 134.37,
+    "sha256": "6659d5d2292f578ca38d32ea9020de1548fff00f7f7dd2730aa0f2016bda6230"
+  },
+  {
+    "artifact": "data/processed/transactions_grouped.parquet",
+    "rows": 13509223,
+    "size_mb": 249.96,
+    "sha256": "a4fb54d9ff5c2c97005e5962eb3ea0dff245ee37fe234275201873876901b354"
+  },
+  {
+    "artifact": "data/processed/split_assignments.parquet",
+    "rows": 4617638,
+    "size_mb": 46.21,
+    "sha256": "8d7204ab0b2f1d2eec2d286a2c03d2d65b54301268f43d1a5d5f513c98d63c7d"
+  },
+  {
+    "artifact": "data/processed/description_status.parquet",
+    "rows": 7925933,
+    "size_mb": 124.05,
+    "sha256": "067e7b98c00975759cae99ae12510e7031f65f427cc279cf360fe841174e163a"
+  },
+  {
+    "artifact": "data/processed/class_eligibility.parquet",
+    "rows": 9347,
+    "size_mb": 0.05,
+    "sha256": "8d22493e0e4d60776077e1c14622bd3226dc6f9be2b9896d57ced14b9ee2ee70"
+  },
+  {
+    "artifact": "data/processed/training_pool.parquet",
+    "rows": 3693073,
+    "size_mb": 45.95,
+    "sha256": "704aafcd3193cd139de1f5e430685755c5e7593661cb90aa3b467ba7868a61da"
+  }
+]

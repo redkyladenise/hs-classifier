@@ -183,3 +183,22 @@ For any description (`group_l1`) evaluated in scenario test sets:
 
 - **Decision & Downstream Policy:**
   - Non-destructive execution: zero records or classes were dropped. Eligibility flags are stored in `data/processed/class_eligibility.parquet` for downstream filtering, fallback routing, or threshold calibration in Track C.
+
+## Track A9b: Training Pool, Cap Rule & Pre-Training Leakage Probe
+
+- **Temporal Group Dynamics:**
+  - Evaluated training groups across years: 79.16% of 2023 groups never recurred in 2024–2025, while 83.28% of 2024 groups were newly introduced. Multi-year pooling is necessary to capture dynamic phrasing turnover.
+- **Hierarchical Cap Rule:**
+  - Descriptions are assigned a `cap_key` by falling back hierarchically (`majority_ahtn8` -> `majority_sh6` -> `majority_hd4` -> `majority_ch2`) to retain tail examples for coarse-level training.
+  - Deterministic integer mix hashing (`seed = 42`) yields strictly nested pools:
+    - $N=10$: 27,889 descriptions
+    - $N=20$: 54,234 descriptions
+    - $N=50$: 121,775 descriptions
+    - $N=100$: 214,636 descriptions
+    - $N=200$: 364,761 descriptions (standard default training budget)
+    - $N=500$: 683,525 descriptions
+    - Full uncapped: 3,693,073 descriptions
+- **Pre-Training Leakage Probe & Limitation:**
+  - Evaluated intra-chapter TF-IDF cosine similarity for 2,000 stratified samples.
+  - Findings: `test_vs_train` exhibits 10.90% share at $\ge 0.95$ similarity (mean max similarity 0.7841), compared to 99.90% internal `train_vs_train` similarity.
+  - Decision: Rather than rebuilding splits via cloud-scale MinHash, this 10.9% residual near-duplicate lexical overlap is formally recorded as an empirical project limitation. All group-level zero-leakage constraints remain fully intact.
