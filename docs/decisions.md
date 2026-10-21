@@ -66,7 +66,7 @@
   - `ok`: 16,757,162 descriptions (99.9984%).
   - `placeholder`: 2 descriptions (0.0000%).
   - `blank`: 274 descriptions (0.0016%, consisting of empty strings, pure symbols, or digit-only entries).
-  
+
 
 ## Track A6: Chapter Scope Selection & Dataset Cleaning
 
@@ -90,3 +90,66 @@
   - **Chapter 73**: Articles of iron or steel (1,678,925 tx, 1,078,611 unique desc, rank #4)
   - **Chapter 87**: Vehicles other than railway or tramway rolling-stock, and parts and accessories thereof (1,711,155 tx, 957,460 unique desc, rank #5)
 - **Cross-Scope Descriptions:** 63,713 normalized descriptions appeared in both chosen and unchosen chapters. For modeling, only transaction rows under chosen chapters are retained in `transactions_scope.parquet`.
+
+## Track A7: Description Grouping & Conflict Preview
+
+- **Hierarchical Levels Defined:**
+  - **Level 1 (`group_l1`):** Direct alias for `desc_norm_id` (identical normalized text).
+  - **Level 2 (`group_l2`):** Skeleton representation (near-duplicates). Strips digits and punctuation symbols, tokenizes words, sorts alphabetically, deduplicates tokens, and hashes to a non-negative 63-bit integer via `blake2b(digest_size=8) & 0x7FFFFFFFFFFFFFFF`.
+- **Scope & Cardinality:**
+  - Distinct Level-1 descriptions in scope: **7,925,933**.
+  - Distinct Level-2 skeleton groups in scope: **4,617,638**.
+  - Reduction ratio: **1.7164** (52.64% of Level-1 descriptions share a skeleton with at least one other description).
+- **Ambiguity & Conflict Rates:**
+  - Overall conflicting descriptions: 0.64% at `ch2`, 1.15% at `hd4`, 1.79% at `sh6`, and 2.24% at `ahtn8`.
+  - Non-singleton descriptions ($\ge 2$ transactions): 4.72% conflict at `ch2`, 8.43% at `hd4`, 13.11% at `sh6`, and **16.42%** at `ahtn8`.
+  - Transaction impact: **20.39% of in-scope transactions** have descriptions declared under multiple 8-digit AHTN codes.
+- **Transaction Frequency Profile:**
+  - Extreme long-tail: 86.36% of unique descriptions appear exactly once, representing 50.67% of all transactions.
+  - Frequent items ($\ge 6$ transactions) comprise only 2.22% of descriptions but drive 32.03% of transactions.
+- **Split Hazard Check:**
+  - The largest Level-2 skeleton group accounts for **0.5322%** of in-scope transactions (71,890 declarations), safely below the 1.0% threshold for cluster-based train/test splitting.
+
+
+## Track A8: Leakage-Free Grouped Data Splitting & Scenarios
+
+### 1. Partitioning Unit & Rules
+- **Unit of Partition:** The Level-2 skeleton group (`group_l2`). A group is atomic and is never divided across splits. All lexical variants sharing a skeleton are co-located in the same partition.
+- **Early vs. Future Groups:**
+  - **Early Groups:** Any group having $\ge 1$ transaction in 2023 or 2024. These groups form the candidate pool for train, validation, and test splits.
+  - **`only_2025` Groups:** Groups whose declarations occur solely in 2025 (`first_year_l2 == 2025`). These groups are held out exclusively as test cases for full-production evaluation (`y2`) and are never used for model training or hyperparameter tuning.
+- **Deterministic Stratification:**
+  - Grouping Stratum: Group-level majority 8-digit tariff code (`majority_ahtn8_l2`), computed strictly across `group_l2` partitions.
+  - Integer-Mixing Hash: Within each majority code, groups are sorted deterministically using a fixed integer-mixing function (`blake2b` digest of `group_l2` concatenated with the random seed `42`). This replaces platform- or engine-dependent hashing to guarantee byte-for-byte reproducibility across local and cloud environments.
+  - Stratum Position Formula:
+    $$\text{pos} = \frac{\text{rank} - 0.5}{N_{\text{groups}}}$$
+    - $\text{pos} < 0.70 \implies \text{\textbf{train}}$
+    - $0.70 \le \text{pos} < 0.85 \implies \text{\textbf{val}}$
+    - $\text{pos} \ge 0.85 \implies \text{\textbf{test}}$
+- **Split Tolerance:** Target ratio among early groups is 70% train / 15% val / 15% test within a tolerance of $\pm 0.5\%$ of groups.
+
+### 2. Evaluation Scenarios & Temporal Alignment
+- **`unseen` Scenario:**
+  - Train: 2023–2024 transactions of `train` groups.
+  - Validation: 2023–2024 transactions of `val` groups.
+  - Test: 2023–2024 transactions of `test` groups (evaluates model generalization to completely unseen product concepts).
+- **`y1` Scenario (1-Year Rollout):**
+  - Train: 2023 transactions of `train` groups.
+  - Validation: 2023 transactions of `val` groups.
+  - Test: All 2024 transactions across all groups.
+- **`y2` Scenario (Full Production):**
+  - Train: 2023–2024 transactions of `train` groups.
+  - Validation: 2023–2024 transactions of `val` groups.
+  - Test: All 2025 transactions (including `only_2025` groups).
+  - *Note:* The `unseen` and `y2` scenarios evaluate the same trained model checkpoint. Data from 2025 is never seen during training or tuning.
+
+### 3. Description "Seen" Status Definitions
+For any description (`group_l1`) evaluated in scenario test sets:
+- **`seen_exact`:** The description's group is in `train` AND the description's individual `first_year` is $\le$ the scenario's final training year.
+- **`seen_near`:** The description's group is in `train` AND the group's `first_year_l2` is $\le$ the scenario's final training year, but the specific `group_l1` text was first observed later.
+- **`new`:** The description's group was assigned to `val`, `test`, or `only_2025` (zero lexical overlap with training groups). In the `unseen` scenario, 100% of test descriptions are strictly `new`.
+
+### 4. Integrity & Freeze Policy
+- Checksums (SHA-256) are generated for `split_assignments.parquet` and `description_status.parquet` and recorded in `docs/split_manifest.md` and `data_log.md`.
+- Both artifacts are treated as immutable and read-only.
+- Cherry-picking via seed re-rolling is prohibited.

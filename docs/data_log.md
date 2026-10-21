@@ -100,3 +100,8 @@ The environment check confirmed that all three files contain:
 - The temporary directory measured 0 MB after successful queries; peak temporary-disk usage was not measured.
 
 **Decision:** Borderline overall under the predefined criteria. Use per-year or partitioned processing for memory-intensive operations. Monitor resource usage during subsequent preprocessing and model training.
+
+## Frozen Splits Log (Track A8) - 2026-10-21
+- `data/processed/split_assignments.parquet`: SHA-256 `8d7204ab0b2f1d2eec2d286a2c03d2d65b54301268f43d1a5d5f513c98d63c7d` (READ-ONLY)
+- `data/processed/description_status.parquet`: SHA-256 `067e7b98c00975759cae99ae12510e7031f65f427cc279cf360fe841174e163a` (READ-ONLY)
+- Partition policy: Level-2 skeleton grouping with stratified position-based assignment (seed 42).
