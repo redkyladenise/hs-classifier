@@ -106,7 +106,7 @@ The environment check confirmed that all three files contain:
 - `data/processed/description_status.parquet`: SHA-256 `067e7b98c00975759cae99ae12510e7031f65f427cc279cf360fe841174e163a` (READ-ONLY)
 - Partition policy: Level-2 skeleton grouping with stratified position-based assignment (seed 42).
 
-## 2026-10-21: Track A Pipeline Finalization & Integrity Sign-Off
+## Track A Pipeline Finalization & Integrity Sign-Off
 
 - Executed full spot-check and validation audit (`scripts/a10_spot_check.py`).
 - All 14 data artifacts cataloged with exact row counts, file sizes, and SHA-256 checksums in `reports/tables/a10_track_a_manifest.json`.
@@ -120,8 +120,8 @@ The environment check confirmed that all three files contain:
 - **Primary Artifact:** `data/reference/ahtn_2022_scope_reference.parquet`
 - **Secondary Artifact:** `data/reference/ahtn_2022_scope_reference.csv`
 - **Record Count:** 3,940 distinct 8-digit leaf codes
-- **Audit Artifact:** `reports/tables/track_f_sample_audit.csv` (n=250 stratified sample)
-- **Gap Analysis Artifact:** `reports/tables/track_f_mismatch_report.csv`
+- **Audit Artifact:** `reports/tables/f_sample_audit.csv` (n=250 stratified sample)
+- **Gap Analysis Artifact:** `reports/tables/f_mismatch_report.csv`
 - **Terms of Use Compliance:** 
   - Extracted fields are strictly limited to core operational columns: `code8`, `code_formatted`, `chapter`, `description`, `source_file`, and `retrieval_date`.
   - Preferential duty schedules, legal notes, MFN tariff rates, and administrative provisions have been excluded to prevent unauthorized republication and maintain lightweight, license-compliant reference lookups.

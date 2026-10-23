@@ -204,7 +204,7 @@ For any description (`group_l1`) evaluated in scenario test sets:
   - Decision: Rather than rebuilding splits via cloud-scale MinHash, this 10.9% residual near-duplicate lexical overlap is formally recorded as an empirical project limitation. All group-level zero-leakage constraints remain fully intact.
 
 
-## Track 9: Architectural & Governance Decisions Log
+## Track F: Architectural & Governance Decisions Log
 
 ### Legislative Amendment Audit (2023–2025)
 - **Date Checked:** October 2026

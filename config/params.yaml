@@ -57,8 +57,6 @@ paths:
 duckdb_memory_limit_gb: 0.6
 duckdb_threads: 1
 duckdb_temp_dir: data/interim/duckdb_tmp
-training_cap_rule: null
-training_cap_per_code: null
 
 split_strata: "majority_ahtn8"
 split_tolerance_group_pct: 0.5
