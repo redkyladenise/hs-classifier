@@ -112,3 +112,20 @@ The environment check confirmed that all three files contain:
 - All 14 data artifacts cataloged with exact row counts, file sizes, and SHA-256 checksums in `reports/tables/a10_track_a_manifest.json`.
 - All test suites passed: `test_a1_a2_ingest`, `test_a3_a5_norm`, `test_a6_scope`, `test_a7_grouping`, `test_a8_split`, `test_a9_eligibility`, `test_a9b_training_pool`.
 - All pipeline requirements verified for downstream Track B (conflict categorization) and Track C (classifier modeling).
+
+## Track F: AHTN 2022 Scope Reference Dataset
+- **Created Date:** 2026-10-23
+- **Source Authority:** Tariff Commission of the Philippines (AHTN 2022 Tariff Book)
+- **Scope:** In-Scope Chapters 39, 73, 84, 85, and 87
+- **Primary Artifact:** `data/reference/ahtn_2022_scope_reference.parquet`
+- **Secondary Artifact:** `data/reference/ahtn_2022_scope_reference.csv`
+- **Record Count:** 3,940 distinct 8-digit leaf codes
+- **Audit Artifact:** `reports/tables/track_f_sample_audit.csv` (n=250 stratified sample)
+- **Gap Analysis Artifact:** `reports/tables/track_f_mismatch_report.csv`
+- **Terms of Use Compliance:** 
+  - Extracted fields are strictly limited to core operational columns: `code8`, `code_formatted`, `chapter`, `description`, `source_file`, and `retrieval_date`.
+  - Preferential duty schedules, legal notes, MFN tariff rates, and administrative provisions have been excluded to prevent unauthorized republication and maintain lightweight, license-compliant reference lookups.
+- **Verification Status:**
+  - Programmatic audit confirmed 0 missing standalone codes and 0 missing national parent codes across all 5 chapter PDFs.
+  - Stratified sample audit (n=250 across all 5 chapters) passed manual verification at <= 0.4% error rate.
+  - Transaction gap analysis confirmed mismatch rate <= 0.0135% across >7.9M historical customs records.

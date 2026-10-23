@@ -191,14 +191,32 @@ For any description (`group_l1`) evaluated in scenario test sets:
 - **Hierarchical Cap Rule:**
   - Descriptions are assigned a `cap_key` by falling back hierarchically (`majority_ahtn8` -> `majority_sh6` -> `majority_hd4` -> `majority_ch2`) to retain tail examples for coarse-level training.
   - Deterministic integer mix hashing (`seed = 42`) yields strictly nested pools:
-    - $N=10$: 27,889 descriptions
-    - $N=20$: 54,234 descriptions
-    - $N=50$: 121,775 descriptions
-    - $N=100$: 214,636 descriptions
-    - $N=200$: 364,761 descriptions (standard default training budget)
-    - $N=500$: 683,525 descriptions
+    - N=10: 27,889 descriptions
+    - N=20: 54,234 descriptions
+    - N=50: 121,775 descriptions
+    - N=100: 214,636 descriptions
+    - N=200: 364,761 descriptions (standard default training budget)
+    - N=500: 683,525 descriptions
     - Full uncapped: 3,693,073 descriptions
 - **Pre-Training Leakage Probe & Limitation:**
   - Evaluated intra-chapter TF-IDF cosine similarity for 2,000 stratified samples.
   - Findings: `test_vs_train` exhibits 10.90% share at $\ge 0.95$ similarity (mean max similarity 0.7841), compared to 99.90% internal `train_vs_train` similarity.
   - Decision: Rather than rebuilding splits via cloud-scale MinHash, this 10.9% residual near-duplicate lexical overlap is formally recorded as an empirical project limitation. All group-level zero-leakage constraints remain fully intact.
+
+
+## Track 9: Architectural & Governance Decisions Log
+
+### Legislative Amendment Audit (2023–2025)
+- **Date Checked:** October 2026
+- **Scope:** Chapters 39, 73, 84, 85, and 87.
+- **Findings:** 
+  - Reviewed key post-2022 Philippine Executive Orders affecting the in-scope chapters, including **EO No. 12 (s. 2023)** (Electric Vehicles and components under Chapter 87) and broader tariff schedules like **EO No. 62 (s. 2024)** and **EO No. 80 (s. 2024)**.
+  - Confirmed that these issuances modified **Most Favored Nation (MFN) rates of duty** or introduced 10/11-digit national subheadings for domestic policy, but **did not structurally delete or invalidate the core 8-digit AHTN 2022 leaf codes**.
+- **Decision:** AHTN 2022 is formally adopted as the immutable 8-digit validity baseline for the 2023–2025 transaction dataset. Rate modifications and national sub-tier expansions are treated as orthogonal to 8-digit code existence.
+
+## Comparative Analysis of Transaction Records against Reference Data
+- **Date Verified:** October 2026
+- **Analysis Outcome:** Confirmed that total mismatch volume across Chapters 39, 73, 84, 85, and 87 is ~0.0047% overall (373 out of 7,908,996 transactions), satisfying the < 1.0% governance ceiling by two full orders of magnitude.
+- **Formal Decision:** 
+  - The AHTN 2022 baseline is formally certified as the authoritative validity standard for the 2023–2025 dataset window.
+  - Unlisted codes are classified as non-systemic anomalies (minor typographical errors or edge-case national extensions) and are retained in raw transaction tables without deletion, allowing downstream training modules (Track C) to determine inclusion based on frequency thresholds.
