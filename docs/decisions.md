@@ -220,3 +220,23 @@ For any description (`group_l1`) evaluated in scenario test sets:
 - **Formal Decision:** 
   - The AHTN 2022 baseline is formally certified as the authoritative validity standard for the 2023–2025 dataset window.
   - Unlisted codes are classified as non-systemic anomalies (minor typographical errors or edge-case national extensions) and are retained in raw transaction tables without deletion, allowing downstream training modules (Track C) to determine inclusion based on frequency thresholds.
+
+
+## Track B Pre-Commitments (Locked: October 2026)
+
+- **Audit Window:** 2023–2024 transactions (aligns with the unseen test scenario; excludes forward 2025 data).
+- **Sampling Frame:** Test split, in-scope chapters (84, 85, 39, 73, 87), `desc_status == 'ok'`, and declared codes verified against the Track F AHTN 2022 whitelist.
+- **Main Sample Size:** 180 unique descriptions (`group_l1`).
+  - **Stratum A (Conflicting):** 90 descriptions (allocated by shallowest divergence: D2=15, D4=20, D6=25, D8=30).
+  - **Stratum B (Repeated, Non-Conflicting):** 45 descriptions ($\ge 2$ declarations in window, exactly 1 code).
+  - **Stratum C (Singletons):** 45 descriptions (exactly 1 declaration in window).
+- **Sealed Reserve:** 40 additional conflicting descriptions drawn concurrently under the same seed, opened strictly if Gate G2 intervals straddle the decision threshold.
+- **Checked Codes per Conflicting Description:** Up to 3 most frequent codes in the window.
+- **Blinding Rule:** Sampling sheet hides transaction counts, majority status, year, and model predictions.
+- **Pilot:** First 30 rows of the shuffled main sample.
+- **Pilot Time Rule:** If median labeling time exceeds 10 minutes/description, cap checked codes at 2 or apply sample shrinkage (minimum 120).
+- **Self-Consistency Re-label:** 40 descriptions re-labeled after $\ge 7$ days without access to original labels.
+- **Gate B3 Thresholds:** Raw agreement $\ge 80\%$, Cohen's kappa $\ge 0.60$.
+- **Gate G2 Decision Thresholds:**
+  - $\tau_{\text{err}} = 25\%$ (share of conflicting descriptions with at least one Mismatch).
+  - $\tau_{\text{amb}} = 50\%$ (share of conflicting descriptions with $\ge 2$ plausible codes or Ambiguous between codes).
