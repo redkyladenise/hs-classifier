@@ -240,3 +240,45 @@ For any description (`group_l1`) evaluated in scenario test sets:
 - **Gate G2 Decision Thresholds:**
   - $\tau_{\text{err}} = 25\%$ (share of conflicting descriptions with at least one Mismatch).
   - $\tau_{\text{amb}} = 50\%$ (share of conflicting descriptions with $\ge 2$ plausible codes or Ambiguous between codes).
+
+### Decision: Gate B3 Resolution & Freezing of Audit Labels
+
+* **Date:** 2026-10-29
+* **Event:** Gate B3 Self-Consistency Check Completion
+* **Status:** Failed acceptance threshold ($P_o = 61.11\%$, $\kappa = 0.4564$). Retest waived by researcher decision.
+* **Outcome:**
+  1. Audit labels frozen directly from `data/audit/labels_main.csv` into `data/audit/labels_frozen.csv`.
+  2. Dataset formally designated as **Low-Confidence** for Gate G2 evaluation purposes.
+  3. **Downstream Constraint:** Pursuant to protocol rules, Gate G2 is restricted exclusively to **Path C** (synthetic-noise experiment, drift analysis, directional claims only; automated label-cleaning or confident learning claims cannot rely on gold-standard equivalence).
+* **Frozen Artifact Checksum (SHA-256):** `4B7A0C151A4137FA0AD34A606510C0A5C4F2789B74BAA2632D1DA47DFC4EE306`
+* **Row Count:** 180 records
+
+### Decision: Gate G2 Path Selection & Track B Sign-Off
+
+* **Date:** 2026-10-29
+* **Milestone:** Step B7 Audit Analysis Completion
+* **Inputs:**
+  * Master Audited File: `data/audit/labels_frozen.csv` (180 rows, SHA-256 verified)
+  * Gate B3 Reliability: $P_o = 61.11\%$, $\kappa = 0.4564$ (Low-Confidence designation)
+  * Weighted Hidden Error Rate: $36.51\%$
+  * Conflict Plausibility Ceiling: $37.78\%$
+  * Verified Benchmark Set: `data/audit/verified_set.parquet` (66 rows)
+
+#### Formal Decision
+Pursuant to the pre-registered evaluation tree, **Gate G2 routes to Path C**:
+1. **Designation:** Path C (Synthetic Noise & Directional Analysis).
+2. **Track D Guidance:**
+   * Claims in capstone findings are strictly limited to directional comparisons and relative noise resilience.
+   * Model performance will be evaluated against:
+     - The raw noisy test frame ($N = 790,058$).
+     - The 66-row verified evaluation benchmark (`verified_set.parquet`).
+     - Injected synthetic noise regimes.
+3. **Core Conclusion on Customs Data:** Because hidden noise in singletons ($37.78\%$) matches the error rate in conflicts ($37.78\%$), simple conflict-filtering is insufficient to clean customs trade data. Ambiguity-aware modeling and confident learning approaches are required.
+
+## Track B Artifact Checksums (Frozen)
+
+| Artifact | SHA-256 Hash | Notes |
+|---|---|---|
+| `docs/labeling_guide.md` | `98BF87143C81DAC49DCAC0C0CB8FC8A54A3A6C0E89C9C7AB8567CCD05D8D504A` | Guide v1.0 (Frozen at Gate B2) |
+| `data/audit/labels_frozen.csv` | `<4B7A0C151A4137FA0AD34A606510C0A5C4F2789B74BAA2632D1DA47DFC4EE306>` | Read-only audited labels (180 rows) |
+| `data/audit/verified_set.parquet` | `9347DEBEC17ABD9E5B22ADBAA92A6EB2EC7656674808512E42D400A6111ACD6D` | Gold evaluation slice (66 rows) |
