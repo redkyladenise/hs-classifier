@@ -45,13 +45,13 @@ SUB6_EXACT_RE = re.compile(r"^(\d{4}\.\d{2})$")
 HDG4_EXACT_RE = re.compile(r"^(\d{2}\.\d{2})$")
 HIERARCHY_DASH_RE = re.compile(r"^-\s*")
 
-# Cleans up floating footnote blocks at the bottom of pages
+# Cleans up floating footnote blocks and inline duty review clauses
 FOOTNOTE_CLEAN_RE = re.compile(
-    r"\s*(?:a\d+|\*)\s+(?:The MFN rate|Starting \d+|Subject to|Applicable to).*$",
+    r"(?:\s*(?:a\d+|\*)\s+(?:The MFN rate|Starting \d+|Subject to|Applicable to).*$|\s*:?\s*rate of duty shall be subject to periodic review.*$)",
     re.IGNORECASE,
 )
 FOOTNOTE_LINE_START_RE = re.compile(
-    r"^(?:a\d+|\*)\s+(?:The MFN rate|Starting \d+|Subject to|Applicable to)",
+    r"^(?:(?:a\d+|\*)\s+(?:The MFN rate|Starting \d+|Subject to|Applicable to)|rate of duty shall be subject to periodic review)",
     re.IGNORECASE,
 )
 
