@@ -10,6 +10,7 @@
 - The all-years distinct-description query failed because it exceeded DuckDB's 0.6 GB memory limit.
 **Decision:** Borderline overall. Use per-year or partitioned processing for memory-intensive operations. Reassess if later preprocessing or model training exceeds available resources.
 
+# Track A - Data Engineering
 ## Track A2: Reference Checks & Nomenclature Ground Truth
 
 ### 1. AHTN 2022 Effective Date
@@ -204,7 +205,7 @@ For any description (`group_l1`) evaluated in scenario test sets:
   - Decision: Rather than rebuilding splits via cloud-scale MinHash, this 10.9% residual near-duplicate lexical overlap is formally recorded as an empirical project limitation. All group-level zero-leakage constraints remain fully intact.
 
 
-## Track F: Architectural & Governance Decisions Log
+# Track F: Architectural & Governance Decisions Log
 
 ### Legislative Amendment Audit (2023–2025)
 - **Date Checked:** October 2026
@@ -221,7 +222,7 @@ For any description (`group_l1`) evaluated in scenario test sets:
   - The AHTN 2022 baseline is formally certified as the authoritative validity standard for the 2023–2025 dataset window.
   - Unlisted codes are classified as non-systemic anomalies (minor typographical errors or edge-case national extensions) and are retained in raw transaction tables without deletion, allowing downstream training modules (Track C) to determine inclusion based on frequency thresholds.
 
-
+# Track B - Label Quality Audit
 ## Track B Pre-Commitments (Locked: October 2026)
 
 - **Audit Window:** 2023–2024 transactions (aligns with the unseen test scenario; excludes forward 2025 data).
@@ -241,7 +242,7 @@ For any description (`group_l1`) evaluated in scenario test sets:
   - $\tau_{\text{err}} = 25\%$ (share of conflicting descriptions with at least one Mismatch).
   - $\tau_{\text{amb}} = 50\%$ (share of conflicting descriptions with $\ge 2$ plausible codes or Ambiguous between codes).
 
-### Decision: Gate B3 Resolution & Freezing of Audit Labels
+## Decision: Gate B3 Resolution & Freezing of Audit Labels
 
 * **Date:** 2026-10-29
 * **Event:** Gate B3 Self-Consistency Check Completion
@@ -253,7 +254,7 @@ For any description (`group_l1`) evaluated in scenario test sets:
 * **Frozen Artifact Checksum (SHA-256):** `4B7A0C151A4137FA0AD34A606510C0A5C4F2789B74BAA2632D1DA47DFC4EE306`
 * **Row Count:** 180 records
 
-### Decision: Gate G2 Path Selection & Track B Sign-Off
+## Decision: Gate G2 Path Selection & Track B Sign-Off
 
 * **Date:** 2026-10-29
 * **Milestone:** Step B7 Audit Analysis Completion
@@ -264,7 +265,7 @@ For any description (`group_l1`) evaluated in scenario test sets:
   * Conflict Plausibility Ceiling: $37.78\%$
   * Verified Benchmark Set: `data/audit/verified_set.parquet` (66 rows)
 
-#### Formal Decision
+## Formal Decision
 Pursuant to the pre-registered evaluation tree, **Gate G2 routes to Path C**:
 1. **Designation:** Path C (Synthetic Noise & Directional Analysis).
 2. **Track D Guidance:**
@@ -282,3 +283,14 @@ Pursuant to the pre-registered evaluation tree, **Gate G2 routes to Path C**:
 | `docs/labeling_guide.md` | `98BF87143C81DAC49DCAC0C0CB8FC8A54A3A6C0E89C9C7AB8567CCD05D8D504A` | Guide v1.0 (Frozen at Gate B2) |
 | `data/audit/labels_frozen.csv` | `<4B7A0C151A4137FA0AD34A606510C0A5C4F2789B74BAA2632D1DA47DFC4EE306>` | Read-only audited labels (180 rows) |
 | `data/audit/verified_set.parquet` | `9347DEBEC17ABD9E5B22ADBAA92A6EB2EC7656674808512E42D400A6111ACD6D` | Gold evaluation slice (66 rows) |
+
+# Track C - Model Training
+## Track C: Pre-commitments and Baseline (Gate C0)
+*   **Date:** October 2026
+*   **Hardware / Memory Limit:** Windows 11, local training. Total free RAM measured at 1.02 GB. Memory ceiling set to 0.76 GB (75% of free RAM).
+*   **Software Versions:** Python 3.14.3, DuckDB 1.5.6, scikit-learn 1.9.1.
+*   **Hash Size:** Word 16-bits, Char 17-bits.
+*   **Beam Width:** 5.
+*   **Validation Samples:** 50,000 for tuning, 100,000 for calibration.
+*   **Confidence Bands:** High >= 0.90, Low < 0.60.
+*   **Decision:** All limits and parameters are locked in `params.yaml` before training begins.
