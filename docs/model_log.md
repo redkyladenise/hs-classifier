@@ -60,3 +60,18 @@
 - Inference Speed: ~86 rows/second (consistent across cold/warm cache due to batch-by-level loading).
 - Peak Memory: ~805 MB (includes `tracemalloc` overhead; safely near the 0.76 GB threshold).
 - Throughput Projection: 1.17M row Unseen dataset projected at 3.75 hours, comfortably passing the 12-hour limit constraint. No sampling fallback required.
+
+## Step C6: Calibration & Confidence Rules
+
+**Calibration & Overconfidence:**
+- Evaluated raw Beam-5 probabilities on `val_cal` (`main` and `y1`).
+- Discovered high Expected Calibration Error (ECE) at the Root level (~63%). This massive overconfidence is a direct artifact of capping the training pool at 200 items per category (equalizing rare and common codes).
+- Generated `calibration_main.json` and `calibration_y1.json` using Isotonic Regression (20 equal-frequency bins) to map naive raw math to true real-world accuracy.
+- Logged true vs. predicted class frequencies (`c6_class_frequencies.csv`) to track training pool bias.
+
+**Risk-Coverage & Target Accuracies:**
+- Established defensible accuracy targets per level. At Level 2, demanding a strict 95% target yields ~18% automation coverage. At Level 8, demanding a 75% target yields ~14% automation coverage.
+
+**DEVIATION LOG - Confidence Bands:**
+- *Deviation Authorized:* The default High (0.90) and Low (0.60) confidence bands were too punitive for the deeper levels, forcing nearly 100% of Level 6 and 8 predictions into the "Low" (Human Verification) bucket.
+- *Adjustment:* Using validation data only, we retained 0.90/0.60 for Levels 2 and 4, but lowered the bands to High=0.75 and Low=0.50 for Levels 6 and 8 to allow safe, partial automation at the bottom of the tree.
