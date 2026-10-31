@@ -217,7 +217,7 @@ def run_c5_tests():
         
         print(f" Retraining node '{node_id}' produced identical predictions and coefficients.")
 
-    print("\n🎉 ALL C5 UNIT TESTS PASSED!")
+    print("\n ALL C5 UNIT TESTS PASSED!")
 
 if __name__ == "__main__":
     run_c5_tests()
