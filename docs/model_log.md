@@ -75,3 +75,16 @@
 **DEVIATION LOG - Confidence Bands:**
 - *Deviation Authorized:* The default High (0.90) and Low (0.60) confidence bands were too punitive for the deeper levels, forcing nearly 100% of Level 6 and 8 predictions into the "Low" (Human Verification) bucket.
 - *Adjustment:* Using validation data only, we retained 0.90/0.60 for Levels 2 and 4, but lowered the bands to High=0.75 and Low=0.50 for Levels 6 and 8 to allow safe, partial automation at the bottom of the tree.
+
+## Step C7: Out-of-Scope Check & Gate C2 Freeze
+
+**OOS Bouncer (t_oos):**
+- Extracted in-scope confidence scores from `val_cal` to find a threshold that preserves 98% of legitimate traffic.
+- Set `t_oos = 0.3788`.
+- Ran OOS tests using `transactions_clean` (unchosen chapters) and synthetic gibberish/extreme strings.
+- **Result:** Massive leakage. ~91% of gibberish and unchosen chapters scored above the threshold. 
+- **Conclusion:** Confidence scores alone cannot block OOS data. We will rely on Track E (Similarity Check) to patch this vulnerability.
+
+**GATE C2 FREEZE DECLARED**
+- Baseline constraint met: Model beats Majority and Fallbacks.
+- All parameters (N=200, Hash=16/17, Beam=5, C-grid, calibration JSONs, bands, and t_oos=0.3788) are strictly frozen. No further changes to model architecture or hyperparameters will be made based on future test results.

@@ -57,31 +57,32 @@ paths:
 duckdb_memory_limit_gb: 0.6
 duckdb_threads: 1
 duckdb_temp_dir: data/interim/duckdb_tmp
-
-split_strata: "majority_ahtn8"
+split_strata: majority_ahtn8
 split_tolerance_group_pct: 0.5
 leakage_probe_sample: 2000
-
-training_cap_rule: "hierarchical_majority_desc_rank"
+training_cap_rule: hierarchical_majority_desc_rank
 training_cap_per_code: 200
-training_cap_ladder: [50000, 100000, 200000, 400000]
+training_cap_ladder:
+- 50000
+- 100000
+- 200000
+- 400000
 leakage_probe_threshold_high: 0.05
-
-# --- Track C: Modeling Parameters ---
 hash_bits_word: 16
 hash_bits_char: 17
 beam_width: 5
 val_tune_size: 50000
 val_cal_size: 100000
-c_grid: 
-  - 0.3
-  - 1
-  - 3
-  - 10
+c_grid:
+- 0.3
+- 1
+- 3
+- 10
 batch_size: 50000
 node_stream_threshold: 150000
 memory_ceiling_gb: 0.76
 max_train_hours: 6
 max_eval_hours: 12
-band_high: 0.90
-band_low: 0.60
+band_high: 0.9
+band_low: 0.6
+t_oos: 0.3788150815057074
