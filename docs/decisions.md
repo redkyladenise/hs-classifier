@@ -284,6 +284,15 @@ Pursuant to the pre-registered evaluation tree, **Gate G2 routes to Path C**:
 | `data/audit/labels_frozen.csv` | `<4B7A0C151A4137FA0AD34A606510C0A5C4F2789B74BAA2632D1DA47DFC4EE306>` | Read-only audited labels (180 rows) |
 | `data/audit/verified_set.parquet` | `9347DEBEC17ABD9E5B22ADBAA92A6EB2EC7656674808512E42D400A6111ACD6D` | Gold evaluation slice (66 rows) |
 
+## Evaluation Caveats for the Verified Set
+
+* **Label Definition:** All performance metrics derived from this set represent **"agreement with plausibility-checked labels"** and must not be interpreted or stated as absolute "true accuracy."
+* **Directional Findings (Path C):** The verified labels are formally designated as low-confidence. Track B Gate B3 failed reliability checks (raw agreement 61.11%, Cohen's Kappa 0.4564), resulting in a Path C designation. Consequently, all findings derived from this set are directional only.
+* **Selection Bias & Hidden Errors:** The verified set contains only 66 records, representing exactly 36.67% of the audited descriptions (those with one clear, unambiguous Match). Because it explicitly filters out ambiguous and mismatched cases, it inherently favors clear descriptions and cannot fully demonstrate the hidden-error effect present in the broader dataset.
+* **Margin of Error:** With a sample size of only 66 records, the statistical margin of error is approximately ±12 percentage points. Small numerical differences between strata or prediction levels are not statistically significant.
+* **Adjudication Scope:** The manual rationales formulated in Phase B5 cited legal statutory notes (e.g., Section XVII Note 2, GRI 3(a)). This exceeded the evaluation guide’s original description-only rule, and the final adjudication was conducted by a single labeler.
+* **Logged Deviation (November 2026):** Due to the exceedingly small sample size (n=66), the near-twin sensitivity (A9b probe) was not executed on this subset. This is formally logged as a deviation from the original roadmap. Near-twin sensitivity is instead reported exclusively on the broader A9b probe sample.
+
 # Track C - Model Training
 ## Track C: Pre-commitments and Baseline (Gate C0)
 *   **Date:** October 2026
@@ -294,3 +303,5 @@ Pursuant to the pre-registered evaluation tree, **Gate G2 routes to Path C**:
 *   **Validation Samples:** 50,000 for tuning, 100,000 for calibration.
 *   **Confidence Bands:** High >= 0.90, Low < 0.60.
 *   **Decision:** All limits and parameters are locked in `params.yaml` before training begins.
+
+
