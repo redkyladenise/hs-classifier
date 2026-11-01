@@ -23,6 +23,7 @@ def run_c8_5():
         df_err = pd.read_csv(tables_dir / "c8_hierarchical_errors.csv")
         df_err_pivot = df_err.pivot(index='scenario', columns='first_error_level', values='share_of_total')
         ax = df_err_pivot.plot(kind='bar', stacked=True, figsize=(10, 6), colormap='viridis')
+        ax.tick_params(axis='x', labelrotation=0)
         plt.title("Hierarchical First-Error Distribution by Scenario", fontsize=14)
         plt.ylabel("Share of Total Descriptions")
         plt.xlabel("Evaluation Scenario")
@@ -38,7 +39,7 @@ def run_c8_5():
         df_cm = pd.read_csv(diag_dir / "cm_chapter_norm_unseen.csv", index_col=0)
         plt.figure(figsize=(8, 6))
         sns.heatmap(df_cm, annot=True, fmt=".2f", cmap="Blues", vmin=0, vmax=1)
-        plt.title("Chapter Confusion Matrix (Row-Normalized) - Unseen Set", fontsize=14)
+        plt.title("Chapter Confusion Matrix (Unseen Set)", fontsize=14)
         plt.ylabel("True Chapter")
         plt.xlabel("Predicted Chapter")
         plt.tight_layout()
@@ -52,7 +53,7 @@ def run_c8_5():
         df_wl = pd.read_csv(diag_dir / "workload_unseen.csv")
         plt.figure(figsize=(8, 5))
         ax = sns.barplot(x='Level', y='Accepted_Coverage_Pct', data=df_wl, color=base_color)
-        plt.title("AI Automation Coverage by Hierarchical Level (Unseen Set)", fontsize=14)
+        plt.title("Coverage by Hierarchical Level (Unseen Set)", fontsize=14)
         plt.ylabel("Coverage % (Auto-Accepted)")
         plt.xlabel("HS Code Level")
         # Fixed warning using standard matplotlib formatter
@@ -63,6 +64,8 @@ def run_c8_5():
     except Exception as e:
         print(f"  [Skip] Chart 3 Error: {e}")
 
+    # Chart 4: Risk Coverage curve in another file
+    
     print("2. Extracting Dynamic Metrics...")
     metrics = {
         'unseen_m1_l8': 'N/A', 'unseen_m2_l8': 'N/A', 'unseen_m3_l8': 'N/A', 'y1_m1_l8': 'N/A',
