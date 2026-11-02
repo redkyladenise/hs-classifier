@@ -129,3 +129,16 @@ The environment check confirmed that all three files contain:
   - Programmatic audit confirmed 0 missing standalone codes and 0 missing national parent codes across all 5 chapter PDFs.
   - Stratified sample audit (n=250 across all 5 chapters) passed manual verification at <= 0.4% error rate.
   - Transaction gap analysis confirmed mismatch rate <= 0.0135% across >7.9M historical customs records.
+
+
+## Track C: Frozen Files Checksums (Gate G3)
+
+These SHA-256 checksums mathematically lock the artifacts from the Track C (LCPN Model) phase, ensuring no files are accidentally altered before Track D and Track G operations.
+
+| Artifact | File Path | SHA-256 Checksum |
+| :--- | :--- | :--- |
+| **Main Model Manifest** | `models/v1/main/manifest.json` | `306787880c2f74b100892e7ec3d1c66c37ff1a60d9e848a780dacb498dcde531` |
+| **Training Pool** | `data/processed/training_pool.parquet` | `704aafcd3193cd139de1f5e430685755c5e7593661cb90aa3b467ba7868a61da` |
+| **Unique Descriptions** | `data/processed/unique_descriptions.parquet` | `6659d5d2292f578ca38d32ea9020de1548fff00f7f7dd2730aa0f2016bda6230` |
+| **Headline Metrics** | `reports/tables/c8_headline_metrics.csv` | `061e198f23f66f4d6058b4ecfe79f61bf5ea74325ca68a0b80c5125e32f05d31` |
+| **Verified Results (C9)** | `reports/tables/c9_verified.csv` | `735721675a717c967911af9be65eddc1c63a70000cbcea3d9ee999995e3329bc` |
