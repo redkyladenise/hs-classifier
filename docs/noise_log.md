@@ -66,3 +66,18 @@ While the C5 baseline model trained on raw data successfully navigated all nodes
 * **H2 (3 nodes collapsed - 8410, 8521, 8702):** Dropping conflicted descriptions entirely was the most destructive approach, as it starved the model of the diverse vocabulary features needed to learn complex boundaries.
 
 **Conclusion:** The raw, unhandled data provides a richer, more balanced feature space. Attempting to manually force a "clean consensus" on historical customs conflicts destroys critical training signals.
+
+## Track D5: Validation Comparison Results
+**D5: Validation Comparison and Gate D2 Execution**
+We evaluated the 100,000-record `val_cal_main` dataset across the raw C5 baseline and the three handled variants using the Beam-5 inference engine. A dynamic patch was applied to the hierarchy traversal to ensure the engine correctly located the frozen 'main' class eligibility mappings for the 'h' variants.
+
+**Gate D2 Results (Level 8 Accuracy & CI Diff):**
+* `main` (Raw Baseline): 38.27%
+* `main_h1` (Majority Rule): 36.42% [-1.98%, -1.71%]
+* `main_h2` (Drop Conflicts): 36.28% [-2.13%, -1.85%]
+* `main_h3` (Down-weight): 36.86% [-1.53%, -1.29%]
+
+**Decision Execution:**
+All three heuristic data-handling methods statistically degraded the AI's real-world accuracy compared to the raw historical baseline. H3 (Down-weighting) performed best among the handled variants but still resulted in a strict accuracy loss.
+
+**ACTION:** Gate D2 triggered the pre-committed rule to reject the handled variants. The raw, unhandled data REMAINS the official headline model. The `main` model is permanently frozen for final testing.
