@@ -315,3 +315,23 @@ Pursuant to the pre-registered evaluation tree, **Gate G2 routes to Path C**:
 - **Synthetic Experiment Setup**: Conflict-free descriptions from N=200 pool with >=2 tx in headings with >=20 descriptions. Noise levels: 10% and 20%, injected heading chosen within the same chapter, share drawn uniformly from 0.1 to 0.7.
 - **Selection & Ranking Set**: `val_cal_main`. Headline method must beat raw baseline with paired cluster-bootstrap interval above 0 on Level-8 M2; otherwise raw baseline remains the headline.
 - **Test Sample Size**: `d_test_sample_size = 300,000` (seeded, stratified by chapter, always includes the 180 audit descriptions).
+
+## Track D (D1 & D2): Label Conflict Handling Results
+
+**D1: Reality Check on Historical Conflicts**
+* **Prevalence:** Label conflicts affect 2.65% of unique descriptions but account for a massive 20.36% of total transaction volume.
+* **The "Majority" Trap:** When evaluating the historical "majority" code against our audited test set, the majority rule failed 58.82% of the time at the 8-digit level. Real-world conflicts are too unreliable to establish a pure ground truth.
+
+**D2: Synthetic Experiment (Laboratory Test)**
+To test data cleaning methods, we built a perfectly clean synthetic base of 38,125 descriptions and injected 10% and 20% fake conflicts. We tested three handling methods:
+* **H1 (Majority Rule):** Keep the highest-weighted code, drop the rest.
+* **H2 (Drop):** Completely remove conflicted descriptions.
+* **H3 (Down-weight):** Keep all codes, but halve their sample weights.
+
+**Findings & Gate Decision:**
+The baseline SGD model (using sublinear TF-IDF) is naturally robust to noise; injecting 20% label noise only degraded accuracy by ~0.12%. 
+* **All handling methods resulted in negative recovery**, making the model worse than simply leaving the noisy data alone.
+* **H2 (Drop) was disastrous**, degrading accuracy by an additional -1.43% because dropping conflicting items destroys critical vocabulary features needed for future predictions.
+* **H1 (Majority)** hides the true signal competing with the noise, also reducing accuracy.
+
+**Status:** The synthetic harness is sane and behaved as expected. Passed the post-D2 Gate: Proceeding to D3 and D4 to verify if this failure of data cleaning holds true on real-world data.

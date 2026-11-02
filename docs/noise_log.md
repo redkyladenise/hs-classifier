@@ -48,3 +48,21 @@ Crucially, **all handling methods resulted in negative recovery**, making the mo
 * **H1 (Majority) hides the true signal:** Accuracy dropped to 65.29% (a -0.21% penalty vs. noisy). Forcing the model to only see the majority code hides the underlying true codes that were competing with the noise.
 
 **Status:** The synthetic harness is sane and behaved as mathematically expected. Passed the post-D2 Gate: Proceeding to D3 and D4 to verify if this total failure of data cleaning holds true on real-world data.
+
+## Track D (D3 & D4): Real-World Handled Training Results
+
+**D3: Building the Handled Training Pairs**
+We applied the three handling methods to the real, historical `train_pairs_main.parquet` data (364,761 descriptions containing 9,664 conflicts), dynamically recalculating the C1 eligibility thresholds.
+* **H1 (Majority Rule):** Deduplicated the 9,664 conflicting descriptions down to their single highest-weighted code.
+* **H2 (Drop):** Purged the conflicting descriptions entirely, reducing the dataset to 355,097 clean descriptions.
+* **H3 (Down-weight):** Retained all pairs but halved the sample weights of conflicting descriptions.
+
+**D4: Retraining the Handled Hierarchies**
+We trained three separate full-scale hierarchies (H1, H2, H3) using the identical, frozen hyperparameters from our C5 baseline (sublinear TF-IDF, identical SGD C-grid). 
+
+**Findings & C4 Sanity Rule Failures:**
+While the C5 baseline model trained on raw data successfully navigated all nodes, **all three heuristic handling methods mathematically broke the AI, inducing terminal node collapse** (where the model abandons learning and defaults to predicting the majority class):
+* **H1 and H3 (2 nodes collapsed - 8410, 8521):** By deleting or down-weighting the minority conflicting codes, the data distribution was artificially skewed. The SGD optimizer failed to find a separating hyperplane for the minority classes.
+* **H2 (3 nodes collapsed - 8410, 8521, 8702):** Dropping conflicted descriptions entirely was the most destructive approach, as it starved the model of the diverse vocabulary features needed to learn complex boundaries.
+
+**Conclusion:** The raw, unhandled data provides a richer, more balanced feature space. Attempting to manually force a "clean consensus" on historical customs conflicts destroys critical training signals.
