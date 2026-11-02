@@ -86,3 +86,18 @@ max_eval_hours: 12
 band_high: 0.9
 band_low: 0.6
 t_oos: 0.3788150815057074
+
+track_d:
+  downweight_factor: 0.5
+  syn_min_tx: 2
+  syn_min_desc: 20
+  syn_noise_levels: [0.10, 0.20]
+  syn_minor_share_min: 0.1
+  syn_minor_share_max: 0.7
+  d_test_sample_size: 300000
+  bootstrap_resamples: 200
+  recovery_min_gap: 0.5
+  max_d_eval_hours: 4.0
+  sample_key_path: "data/audit/sample_key.csv"
+  verified_set_path: "data/audit/verified_set.parquet"
+  frozen_labels_path: "data/audit/labels_frozen.csv"

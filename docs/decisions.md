@@ -304,4 +304,14 @@ Pursuant to the pre-registered evaluation tree, **Gate G2 routes to Path C**:
 *   **Confidence Bands:** High >= 0.90, Low < 0.60.
 *   **Decision:** All limits and parameters are locked in `params.yaml` before training begins.
 
-
+# Track D - Label-Noise Experiment
+## Track D Pre-Commitments and Protocol Lock (Gate D0)
+- **Date**: November 2, 2026
+- **Governing Rule**: Path C (selected at Gate G2). Claims are strictly directional, reporting relative model rankings, mismatch reproduction, and synthetic recovery. No claims of true real-world accuracy.
+- **Handling Strategies [P1]**:
+  - H1 (Majority): Keep top-frequency 8-digit code at weight 1.0 (smaller code breaks ties).
+  - H2 (Drop Conflicted): Remove the entire description from training.
+  - H3 (Down-weight): Retain raw pairs, scale instance weight of conflicting descriptions by 0.5.
+- **Synthetic Experiment Setup**: Conflict-free descriptions from N=200 pool with >=2 tx in headings with >=20 descriptions. Noise levels: 10% and 20%, injected heading chosen within the same chapter, share drawn uniformly from 0.1 to 0.7.
+- **Selection & Ranking Set**: `val_cal_main`. Headline method must beat raw baseline with paired cluster-bootstrap interval above 0 on Level-8 M2; otherwise raw baseline remains the headline.
+- **Test Sample Size**: `d_test_sample_size = 300,000` (seeded, stratified by chapter, always includes the 180 audit descriptions).
