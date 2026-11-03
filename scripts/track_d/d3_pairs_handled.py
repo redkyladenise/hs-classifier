@@ -80,18 +80,14 @@ def main():
     print(f"Raw pairs loaded: {len(raw_df):,} pairs across {n_desc_raw:,} descriptions.")
     print(f"Found {n_conflicting:,} conflicting descriptions.")
 
-    # Apply Handlers and Eligibility
     print("\nApplying H1 (Majority Rule)...")
     h1_df = apply_h1(raw_df)
-    h1_df = reapply_eligibility(h1_df, min_desc)
 
     print("Applying H2 (Drop Conflicted)...")
     h2_df = apply_h2(raw_df)
-    h2_df = reapply_eligibility(h2_df, min_desc)
 
     print("Applying H3 (Down-weight)...")
     h3_df = apply_h3(raw_df)
-    h3_df = reapply_eligibility(h3_df, min_desc)
 
     # Compliance Checks per File 6
     print("\nRunning roadmap compliance checks...")

@@ -133,10 +133,10 @@ def main():
             y_train = np.array([r[1] for r in train_data])
             if len(set(y_train)) < 2: 
                 continue
-                
+
             X_text = [r[0] for r in train_data]
-            w_train = np.array([float(r[2]) for r in train_data])
-            
+            w_train = np.array([r[2] for r in train_data], dtype=np.float32)
+
             X_train = extractor.transform(X_text)
             
             c_val = best_c_grid.get(p_level, 1.0)
