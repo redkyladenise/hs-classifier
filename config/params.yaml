@@ -101,3 +101,15 @@ track_d:
   sample_key_path: "data/audit/sample_key.csv"
   verified_set_path: "data/audit/verified_set.parquet"
   frozen_labels_path: "data/audit/labels_frozen.csv"
+
+track_e:
+  memory_ceiling_gb: 0.68       # Safest limit based on your machine
+  retrieval_k: 5                # How many past declarations to retrieve
+  show_examples: false          # Set to true later if license is resolved
+  split_share: 0.60             # Triggers warning if top code has less than 60% agreement
+  min_example_tx: 20            # Hide items that haven't been imported at least 20 times
+  vague_max_words: 2            # Flag descriptions with 2 words or fewer
+  vague_low_share_max: 0.40     # Rule for using low confidence to flag vagueness
+  vague_min_gap: 5.0            # Must show at least 5% accuracy drop to keep a flag rule
+  e_eval_sample_size: 50000     # Target size for the final evaluation
+  max_e_eval_hours: 3           # Budgeted time for evaluation

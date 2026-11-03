@@ -135,7 +135,7 @@ def main():
     meta_full.to_parquet('data/processed/retrieval/index_meta.parquet')
     
     summary_df = pd.DataFrame(summary_stats)
-    summary_df.to_csv('reports/tables/e1_index_summary.csv', index=False)
+    summary_df.to_csv('reports/tables/track_e/e1_index_summary.csv', index=False)
     
     manifest = {
         "pool_count": len(meta_full),
