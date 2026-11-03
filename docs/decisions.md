@@ -336,6 +336,11 @@ The baseline SGD model is naturally robust to noise; injecting 20% label noise o
 - Rejected H1, H2, and H3 heuristic data handling. No handling method improved on raw labels in these experiments. The raw unhandled baseline is frozen for Track E.
 
 # Track E: Retrieval
+* **Constraint:** Enforced `memory_ceiling_gb: 0.68`. Pre-sorted queries by `routed_chapters` during batch evaluation to prevent DuckDB hard-drive thrashing.
+* **Safety Brakes:** Locked `display_level: 4` (only show codes down to 4 digits) and `min_similarity: 0.5` (flag as "no close match" below this).
+* **Text Privacy:** Locked `show_examples: false` due to unresolved dataset licenses.
+* **Evaluation Result:** Retrieval engine statistically beat the frequency baseline at levels 4, 6
+
 ## Track E Settings & E1b Index Check (Nov 2026)
 - **E1b Leakage Check:** Passed perfectly. 0 items leaked into validation/test splits. 0 evaluation sample leaks. The 367,085 indexed items exactly matched `train_pairs_main.parquet` (0 extra descriptions), proving the index is mathematically safe and isolated.
 - **Neighbors (retrieval_k):** 5

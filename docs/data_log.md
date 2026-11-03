@@ -149,3 +149,13 @@ These SHA-256 checksums mathematically lock the artifacts from the Track C (LCPN
 | `data/processed/train_pairs_main.parquet` | Raw Pairs | `52e8423f5befe2e26d447504f3b4d95dbfe6f8d0c7510bb32a923b0508b6d890` |
 | `data/processed/d_test_sample_ids.parquet` | Test Sample (N=300k) | `0c44a490efc2b11d7a677d6b0371433494ed7615125e7801dd98ce6a08baf99a` |
 | `models/v1/main/manifest.json` | Raw Model Manifest | `306787880c2f74b100892e7ec3d1c66c37ff1a60d9e848a780dacb498dcde531` |
+
+### Track E Frozen Files
+| File | Description | Checksum (SHA-256 placeholder) |
+| :--- | :--- | :--- |
+| `data/processed/retrieval_index/` | DuckDB index files (367,085 descriptions) | `6FAB546BC0416C48819FCF540EA1942FE6B19EDDBA2E9A8BE12C4478C412325E` |
+| `data/processed/retrieval_index/manifest.json` | Index metadata manifest | `[generate via sha256sum]` |
+| `data/processed/idf_main.npy` | TF-IDF global weights | `D93725529296FC358EAB735A0E1C23994291424EEEEAF024737F884533F58514` |
+| `data/audit/sample_key.csv` | 180-item main audit sample list | `1E99783DD829625F2523BE4BCF76C2BFB8929F39FFE0556D005CE4CDB8C08C7E` |
+| `reports/tables/e4_hit_rate.csv` | Hit@5 metrics vs Frequency Baseline | `6E685DA9593B680EF2FBAD85ACB8424AEB232C671D3ED7C639F72EA4D0E76181` |
+| `reports/tables/e4_verified.csv` | Hit@5 against plausibility-checked labels | `57DB974D81F62ACA17EABCF5F271E1D4DB7D5FAF82FBF650FC064447E97B2B9C` |
