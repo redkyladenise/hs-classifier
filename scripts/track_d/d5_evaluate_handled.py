@@ -5,8 +5,6 @@ import pandas as pd
 from pathlib import Path
 import sys
 import gc
-import shutil
-import types
 
 sys.path.append('.')
 from src.hsclf.models.features import FeatureExtractor
@@ -31,44 +29,15 @@ def bootstrap_difference(acc_base, acc_variant, groups, n_resamples=200):
         
     return np.percentile(diffs, [2.5, 97.5])
 
-# --- THE PATCH ---
-def patched_get_children(self, parent_code, parent_level):
-    """Patched version that falls back to 'main' for class eligibility."""
-    child_level = parent_level + 2
-    scenario_elig = 'main' if self.scenario.startswith('main_h') else self.scenario
-    
-    query = f"""
-        SELECT DISTINCT c.class as child_code
-        FROM read_parquet('data/processed/train_pairs_{self.scenario}.parquet') t
-        JOIN read_parquet('data/processed/class_eligibility.parquet') c
-          ON c.scenario = '{scenario_elig}' AND c.level = {child_level}
-        WHERE t.elig_ch2 = true 
-    """
-    if parent_level == 2:
-        query += f"AND t.ch2 = '{parent_code}' AND c.class = t.hd4 AND t.elig_hd4 = true"
-    elif parent_level == 4:
-        query += f"AND t.hd4 = '{parent_code}' AND c.class = t.sh6 AND t.elig_sh6 = true"
-    elif parent_level == 6:
-        query += f"AND t.sh6 = '{parent_code}' AND c.class = t.ahtn8 AND t.elig_ahtn8 = true"
-    elif parent_level == 0:
-        query = f"""
-            SELECT DISTINCT t.ch2 as child_code
-            FROM read_parquet('data/processed/train_pairs_{self.scenario}.parquet') t
-            WHERE t.elig_ch2 = true
-        """
-    result = self.con.execute(query).fetchall()
-    return [row[0] for row in result]
-# -----------------
-
 def score_variant(variant_name, test_data, params):
     print(f"\n--- Scoring Variant: {variant_name.upper()} ---")
     
     extractor = FeatureExtractor(params['hash_bits_word'], params['hash_bits_char'])
     extractor.set_idf(np.load("data/processed/idf_main.npy"))
     
+    # Initialize engine cleanly. All handled models share the 'main' hierarchy structure now.
     engine = HSInferenceEngine(scenario=variant_name, cache_size=400)
-    # Apply the monkey-patch to bypass the missing eligibility table entries
-    engine.hierarchy.get_children = types.MethodType(patched_get_children, engine.hierarchy)
+    engine.hierarchy.scenario = 'main' # Points class eligibility lookup to the frozen baseline
     
     predictions = []
     batch_size = 5000
@@ -113,10 +82,7 @@ def score_variant(variant_name, test_data, params):
         'acc_ch2': np.array([p in t for p, t in zip(res['pred_ch2'], res['true_ch2'])]).astype(int),
         'acc_hd4': np.array([p in t for p, t in zip(res['pred_hd4'], res['true_hd4'])]).astype(int),
         'acc_sh6': np.array([p in t for p, t in zip(res['pred_sh6'], res['true_sh6'])]).astype(int),
-        'acc_ahtn8': np.array([p in t for p, t in zip(res['pred_ahtn8'], res['true_ahtn8'])]).astype(int),
-        't5_hd4': np.array([any(tgt in p5 for tgt in t) for t, p5 in zip(res['true_hd4'], res['top5_hd4'])]).astype(int),
-        't5_sh6': np.array([any(tgt in p5 for tgt in t) for t, p5 in zip(res['true_sh6'], res['top5_sh6'])]).astype(int),
-        't5_ahtn8': np.array([any(tgt in p5 for tgt in t) for t, p5 in zip(res['true_ahtn8'], res['top5_ahtn8'])]).astype(int)
+        'acc_ahtn8': np.array([p in t for p, t in zip(res['pred_ahtn8'], res['true_ahtn8'])]).astype(int)
     }
     return metrics
 
@@ -139,33 +105,25 @@ def calculate_summary(metrics_dict, variant, base_metrics=None, split="overall")
         'm2_l4': np.mean(m['acc_hd4']),
         'm2_l6': np.mean(m['acc_sh6']),
         'm2_l8': np.mean(m['acc_ahtn8']),
-        'm2_t5_l4': np.mean(m['t5_hd4']),
-        'm2_t5_l6': np.mean(m['t5_sh6']),
-        'm2_t5_l8': np.mean(m['t5_ahtn8']),
         'ci2.5_diff_l8': None,
         'ci97.5_diff_l8': None
     }
     
-    if base_metrics:
+    if base_metrics and len(m['acc_ahtn8']) > 0:
         ci = bootstrap_difference(b['acc_ahtn8'], m['acc_ahtn8'], m['group'], n_resamples=200)
         row['ci2.5_diff_l8'] = round(ci[0], 4)
         row['ci97.5_diff_l8'] = round(ci[1], 4)
         
     for k, v in row.items():
-        if isinstance(v, float) and k not in ['ci2.5_diff_l8', 'ci97.5_diff_l8']:
+        if isinstance(v, float) and pd.notna(v) and k not in ['ci2.5_diff_l8', 'ci97.5_diff_l8']:
             row[k] = round(v, 4)
             
     return row
 
 def main():
     print("=" * 60)
-    print("Track D - Step D5: Evaluate Handling Impact & Gate D2")
+    print("Track D - Step D5: Evaluate Handled (Clean Pipeline)")
     print("=" * 60)
-
-    for v in ['main_h1', 'main_h2', 'main_h3']:
-        dst = Path(f"data/processed/hierarchy_{v}.parquet")
-        if not dst.exists():
-            shutil.copy("data/processed/hierarchy_main.parquet", dst)
 
     with open("config/params.yaml", "r") as f:
         params = yaml.safe_load(f)
@@ -196,7 +154,7 @@ def main():
     for v in variants:
         all_metrics[v] = score_variant(v, eval_df, params)
 
-    print("\nCalculating metrics and bootstrap intervals...")
+    print("\nCalculating metrics and data splits...")
     summary_rows = []
     base = all_metrics['main']
     
@@ -211,7 +169,7 @@ def main():
     out_path.parent.mkdir(parents=True, exist_ok=True)
     res_df.to_csv(out_path, index=False)
     
-    print("\n--- Gate D2 Pre-Committed Rule Check ---")
+    print("\n--- Gate D2 Pre-Committed Rule Check (Overall Split) ---")
     l8_overall = res_df[res_df['split'] == 'overall'][['variant', 'm2_l8', 'ci2.5_diff_l8', 'ci97.5_diff_l8']]
     print(l8_overall.to_string(index=False))
     
@@ -219,7 +177,7 @@ def main():
     success_variants = []
     for _, row in l8_overall.iterrows():
         if row['variant'] == 'main': continue
-        if row['ci2.5_diff_l8'] > 0:
+        if row['ci2.5_diff_l8'] is not None and row['ci2.5_diff_l8'] > 0:
             success_variants.append(row['variant'])
             
     if not success_variants:

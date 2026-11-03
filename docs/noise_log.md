@@ -7,6 +7,7 @@
 - Available RAM at start: 1.06 GB
 - Free Disk space: 269.80 GB
 - Locked test sample size (`d_test_sample_size`): 300,000
+- Pool size from unseen predictions: 912,322 distinct descriptions
 
 ## File Verification Table
 
@@ -20,7 +21,7 @@
 | `data/audit/verified_set.parquet` | Verified | 0.01 | `9347debec17abd9e5b22adbaa92a6eb2ec7656674808512e42d400a6111acd6d` |
 | `data/audit/labels_frozen.csv` | Verified | 0.04 | `4b7a0c151a4137fa0ad34a606510c0a5c4f2789b74baa2632d1da47dfc4ee306` |
 | `data/audit/sample_key.csv` | Verified | 0.02 | `1e99783dd829625f2523be4bcf76c2bfb8929f39ffe0556d005ce4cdb8c08c7e` |
-
+| `data/processed/d_test_sample_ids.parquet` | Verified | - | 0c44a490efc2b11d7a677d6b0371433494ed7615125e7801dd98ce6a08baf99a |
 ## Table Row Counts
 
 - **train_pairs_main**: (380150, 364761)
@@ -45,32 +46,32 @@ The raw SGD baseline is robust to this noise shape. The clean baseline achieved 
 ## Track D (D3 & D4): Real-World Handled Training Results
 
 **D3: Building the Handled Training Pairs**
-We applied the three handling methods to the real, historical `train_pairs_main.parquet` data (364,761 descriptions containing 9,664 conflicts), dynamically recalculating the C1 eligibility thresholds.
-* **H1 (Majority Rule):** Deduplicated the 9,664 conflicting descriptions down to their single highest-weighted code.
-* **H2 (Drop):** Purged the conflicting descriptions entirely, reducing the dataset to 355,097 clean descriptions.
-* **H3 (Down-weight):** Retained all pairs but halved the sample weights of conflicting descriptions.
+We applied the three handling methods to the real, historical `train_pairs_main.parquet` data (364,761 descriptions containing 9,664 conflicts). To ensure structural consistency, all handled variants strictly inherited the frozen C1 class eligibility thresholds from the baseline.
+- **H1 (Majority Rule):** Deduplicated the 9,664 conflicting descriptions down to their single highest-weighted code.
+- **H2 (Drop):** Purged the conflicting descriptions entirely, reducing the dataset to 355,097 clean descriptions.
+- **H3 (Down-weight):** Retained all pairs but halved the sample weights of conflicting descriptions.
 
 **D4: Retraining the Handled Hierarchies**
-We trained three separate full-scale hierarchies (H1, H2, H3) using the identical, frozen hyperparameters from our C5 baseline (sublinear TF-IDF, identical SGD C-grid). 
+We trained three separate full-scale hierarchies (H1, H2, H3) using the identical, frozen hyperparameters from our C5 baseline. Before doing so, we ran a pipeline control step (H0) on the unmodified raw data to establish natural baselines.
 
 **Findings & C4 Sanity Rule Failures:**
-While the C5 baseline model trained on raw data successfully navigated all nodes, **all three heuristic handling methods mathematically broke the AI, inducing terminal node collapse** (where the model abandons learning and defaults to predicting the majority class):
-* **H1 and H3 (2 nodes collapsed - 8410, 8521):** By deleting or down-weighting the minority conflicting codes, the data distribution was artificially skewed. The SGD optimizer failed to find a separating hyperplane for the minority classes.
-* **H2 (3 nodes collapsed - 8410, 8521, 8702):** Dropping conflicted descriptions entirely was the most destructive approach, as it starved the model of the diverse vocabulary features needed to learn complex boundaries.
+The H0 control run proved that nodes 8410 and 8521 inherently collapse under the raw data due to extreme natural class imbalance (~90% majority class).
+- **H1 and H3 (2 nodes collapsed - 8410, 8521):** These variants simply inherited the natural structural collapses present in the baseline data distribution.
+- **H2 (3 nodes collapsed - 8410, 8521, 8702):** Dropping conflicted descriptions entirely was uniquely destructive. By deleting historical data, H2 starved the AI of diverse vocabulary features, causing a third node to collapse that successfully trains under the baseline.
 
-**Conclusion:** The raw, unhandled data provides a richer, more balanced feature space. Attempting to manually force a "clean consensus" on historical customs conflicts destroys critical training signals.
+**Conclusion:** The raw, unhandled data provides a richer, more balanced feature space. Attempting to manually force a "clean consensus" on historical customs conflicts by dropping data actively destroys critical training signals.
 
 ## Track D5: Validation Comparison Results
 **D5: Validation Comparison and Gate D2 Execution**
-We evaluated the 100,000-record `val_cal_main` dataset across the raw C5 baseline and the three handled variants using the Beam-5 inference engine. A dynamic patch was applied to the hierarchy traversal to ensure the engine correctly located the frozen 'main' class eligibility mappings for the 'h' variants.
+We evaluated the 100,000-record `val_cal_main` dataset across the raw C5 baseline and the three handled variants using the Beam-5 inference engine. To rigorously test the methods, performance was explicitly evaluated across overall, conflict-prone, and consistent data splits.
 
-**Gate D2 Results (Level 8 Accuracy & CI Diff):**
-* `main` (Raw Baseline): 38.27%
-* `main_h1` (Majority Rule): 36.42% [-1.98%, -1.71%]
-* `main_h2` (Drop Conflicts): 36.28% [-2.13%, -1.85%]
-* `main_h3` (Down-weight): 36.86% [-1.53%, -1.29%]
+**Gate D2 Results (Level 8 Accuracy & CI Diff - Overall Split):**
+- `main` (Raw Baseline): 38.27%
+- `main_h1` (Majority Rule): 36.41% [-1.98%, -1.73%]
+- `main_h2` (Drop Conflicts): 36.28% [-2.13%, -1.85%]
+- `main_h3` (Down-weight): 36.89% [-1.50%, -1.26%]
 
 **Decision Execution:**
-All three heuristic data-handling methods statistically degraded the AI's real-world accuracy compared to the raw historical baseline. H3 (Down-weighting) performed best among the handled variants but still resulted in a strict accuracy loss.
+All three heuristic data-handling methods statistically degraded the AI's real-world accuracy compared to the raw historical baseline. H3 (Down-weighting) performed best among the handled variants but still resulted in a strict, statistically significant accuracy loss.
 
 **ACTION:** Gate D2 triggered the pre-committed rule to reject the handled variants. The raw, unhandled data REMAINS the official headline model. The `main` model is permanently frozen for final testing.
