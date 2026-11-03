@@ -159,3 +159,4 @@ These SHA-256 checksums mathematically lock the artifacts from the Track C (LCPN
 | `data/audit/sample_key.csv` | 180-item main audit sample list | `1E99783DD829625F2523BE4BCF76C2BFB8929F39FFE0556D005CE4CDB8C08C7E` |
 | `reports/tables/e4_hit_rate.csv` | Hit@5 metrics vs Frequency Baseline | `6E685DA9593B680EF2FBAD85ACB8424AEB232C671D3ED7C639F72EA4D0E76181` |
 | `reports/tables/e4_verified.csv` | Hit@5 against plausibility-checked labels | `57DB974D81F62ACA17EABCF5F271E1D4DB7D5FAF82FBF650FC064447E97B2B9C` |
+| `data/reference/generic_words.txt` | 15 generic words for E6 vagueness UI check | `830CEBB79C797386DE6B76385CAC2546632913EC70AB7BD6E721472E5FBAB7F0` |
