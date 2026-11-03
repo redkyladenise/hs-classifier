@@ -35,3 +35,4 @@
 4. **Near-Twin Leakage:** As documented in the A9b probe, highly repetitive commercial terminology creates unavoidable high-similarity leakage (~10.9%) between training and test sets.
 5. **Temporal Drift:** The model's baseline accuracy degrades on subsequent years (2024, 2025) due to shifting supply chain vocabulary.
 6. **Local Hardware Constraints:** All architectural decisions (N=200 cap, caching, 32-bit floats) were artificially forced by local RAM limitations, meaning the mathematical ceiling of this dataset has not been reached.
+7. **Note on Handled Models:** Track D handled models (H1, H2, H3) were strictly experimental, were not recalibrated, and do not replace the frozen baseline model.

@@ -142,3 +142,10 @@ These SHA-256 checksums mathematically lock the artifacts from the Track C (LCPN
 | **Unique Descriptions** | `data/processed/unique_descriptions.parquet` | `6659d5d2292f578ca38d32ea9020de1548fff00f7f7dd2730aa0f2016bda6230` |
 | **Headline Metrics** | `reports/tables/c8_headline_metrics.csv` | `061e198f23f66f4d6058b4ecfe79f61bf5ea74325ca68a0b80c5125e32f05d31` |
 | **Verified Results (C9)** | `reports/tables/c9_verified.csv` | `735721675a717c967911af9be65eddc1c63a70000cbcea3d9ee999995e3329bc` |
+
+## Track D Frozen Files
+| File | Description | SHA-256 Checksum |
+| :--- | :--- | :--- |
+| `data/processed/train_pairs_main.parquet` | Raw Pairs | `52e8423f5befe2e26d447504f3b4d95dbfe6f8d0c7510bb32a923b0508b6d890` |
+| `data/processed/d_test_sample_ids.parquet` | Test Sample (N=300k) | `0c44a490efc2b11d7a677d6b0371433494ed7615125e7801dd98ce6a08baf99a` |
+| `models/v1/main/manifest.json` | Raw Model Manifest | `306787880c2f74b100892e7ec3d1c66c37ff1a60d9e848a780dacb498dcde531` |

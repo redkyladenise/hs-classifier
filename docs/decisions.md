@@ -331,3 +331,6 @@ The baseline SGD model is naturally robust to noise; injecting 20% label noise o
 - **Performance:** All handled variants performed worse than the raw noisy baseline. H2 (Drop) degraded accuracy by an additional 1.43 points, H3 by 0.34 points, and H1 by 0.22 points.
 
 **Status:** The synthetic harness is sane. Passed Gate D1: Proceeding to real-world data training.
+
+## Track D Conclusion: 
+- Rejected H1, H2, and H3 heuristic data handling. No handling method improved on raw labels in these experiments. The raw unhandled baseline is frozen for Track E.
