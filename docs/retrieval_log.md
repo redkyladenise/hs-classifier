@@ -11,3 +11,10 @@
 - `retrieval_k`: 5
 - `split_share`: 0.60
 - `min_example_tx`: 20
+
+# Retrieval Engine Log
+
+## E2 Benchmarks (200 queries)
+- **Peak RAM Usage:** 93.33 MB (Well below the 680 MB / 0.68 GB constraint)
+- **Time per query:** 0.0870 seconds
+- **Evidence Text used:** "How others declared similar goods. Unverified, and may include errors."

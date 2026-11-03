@@ -334,3 +334,10 @@ The baseline SGD model is naturally robust to noise; injecting 20% label noise o
 
 ## Track D Conclusion: 
 - Rejected H1, H2, and H3 heuristic data handling. No handling method improved on raw labels in these experiments. The raw unhandled baseline is frozen for Track E.
+
+## Track E Settings & E1b Index Check (Nov 2026)
+- **E1b Leakage Check:** Passed perfectly. 0 items leaked into validation/test splits. 0 evaluation sample leaks. The 367,085 indexed items exactly matched `train_pairs_main.parquet` (0 extra descriptions), proving the index is mathematically safe and isolated.
+- **Neighbors (retrieval_k):** 5
+- **Chapters searched (retrieval_chapters):** 2 (the first two distinct chapters among the model's top-5 predictions).
+- **Distribution:** Share of 2023–2024 declarations among the 5 neighbors (top 3 codes + "other"). Shows counts, but NO example texts (license constraint).
+- **split_share:** 0.60
