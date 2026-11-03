@@ -113,3 +113,7 @@ track_e:
   vague_min_gap: 5.0            # Must show at least 5% accuracy drop to keep a flag rule
   e_eval_sample_size: 50000     # Target size for the final evaluation
   max_e_eval_hours: 3           # Budgeted time for evaluation
+
+retrieval:
+  display_level: 4
+  min_similarity: 0.5
