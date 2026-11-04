@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block title %}About - HS Classifier{% endblock %}
+
+{% block content %}
+<div class="text-center mb-5">
+    <h1 class="fw-bold" style="color: var(--color-primary);">About the HS Classifier</h1>
+    <p class="lead text-muted mt-3">
+        An assistant for customs brokers and small importers that suggests AHTN codes from a product description.
+    </p>
+</div>
+
+<!-- What it does and does not do -->
+<div class="row mb-5 g-4">
+    <div class="col-md-6">
+        <div class="card h-100 border-0 shadow-sm" style="border-radius: 12px;">
+            <div class="card-body p-4">
+                <h4 class="card-title fw-bold mb-3" style="color: var(--color-primary);">What it does</h4>
+                <ul class="list-unstyled mb-0">
+                    <li class="mb-2">✓ Suggests codes at 2, 4, 6, and 8 digits</li>
+                    <li class="mb-2">✓ Shows confidence levels for each suggestion</li>
+                    <li>✓ Displays similar past declarations as evidence</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card h-100 border-0 shadow-sm" style="border-radius: 12px;">
+            <div class="card-body p-4">
+                <h4 class="card-title fw-bold mb-3" style="color: var(--color-primary);">What it does not do</h4>
+                <ul class="list-unstyled mb-0 text-muted">
+                    <li class="mb-2">✗ Provide an official classification</li>
+                    <li class="mb-2">✗ Replace a formal advance ruling</li>
+                    <li>✗ Calculate duty rates</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- How it works -->
+<h3 class="fw-bold mb-4" style="color: var(--color-primary);">How it works</h3>
+<div class="row mb-5 g-3">
+    <div class="col-md-3">
+        <div class="p-3 bg-white rounded shadow-sm border h-100">
+            <h5 class="fw-bold fs-6 text-dark">1. Clean</h5>
+            <p class="small text-muted mb-0">The text is cleaned up.</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="p-3 bg-white rounded shadow-sm border h-100">
+            <h5 class="fw-bold fs-6 text-dark">2. Predict</h5>
+            <p class="small text-muted mb-0">Models walk down the code hierarchy.</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="p-3 bg-white rounded shadow-sm border h-100">
+            <h5 class="fw-bold fs-6 text-dark">3. Confidence</h5>
+            <p class="small text-muted mb-0">A confidence level is attached.</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="p-3 bg-white rounded shadow-sm border h-100">
+            <h5 class="fw-bold fs-6 text-dark">4. Evidence</h5>
+            <p class="small text-muted mb-0">Similar past declarations are shown.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Scope -->
+<h3 class="fw-bold mb-3" style="color: var(--color-primary);">Scope</h3>
+<p>This tool currently supports five chapters of the AHTN 2022 tariff schedule. These chapters cover about half of the in-scope trade (13,509,223 transactions). <!-- SOURCE: Track A6 --> If you enter a description outside these chapters, the tool will show an out-of-scope message.</p>
+<div class="table-responsive mb-5">
+    <table class="table table-bordered bg-white">
+        <thead class="table-light">
+            <tr>
+                <th>Chapter</th>
+                <th>Official Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>84</td><td>Nuclear reactors, boilers, machinery and mechanical appliances; parts thereof</td></tr>
+            <tr><td>85</td><td>Electrical machinery and equipment and parts thereof; sound recorders and reproducers; television image and sound recorders and reproducers; parts and accessories of such articles</td></tr>
+            <tr><td>39</td><td>Plastics and articles thereof</td></tr>
+            <tr><td>73</td><td>Articles of iron or steel</td></tr>
+            <tr><td>87</td><td>Vehicles other than railway or tramway rolling-stock, and parts and accessories thereof</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Data and Limitations -->
+<div class="row g-4 mb-5">
+    <div class="col-md-6">
+        <h3 class="fw-bold mb-3" style="color: var(--color-primary);">Data Source</h3>
+        <p>The system is trained on Bureau of Customs declarations for 2023–2025, compiled by BetterGov.ph, using the AHTN 2022 schedule.</p>
+        <p class="text-muted"><small>Data accessed: October 2026.</small></p>
+    </div>
+    <div class="col-md-6">
+        <div class="card border-warning border-opacity-50 bg-warning bg-opacity-10">
+            <div class="card-body">
+                <h4 class="card-title fw-bold text-dark mb-3">Important Limitations</h4>
+                <ul class="mb-0 small text-dark">
+                    <li>Declared codes are <strong>not verified</strong>. About one in five transactions (20.39%) belongs to a description declared under more than one code. <!-- SOURCE: Track A7 --></li>
+                    <li>Label errors may exist even where descriptions agree (low-confidence audit estimate: 36.51%). <!-- SOURCE: Track B7 --></li>
+                    <li>Tariff-line suggestions are mostly low confidence and need verification.</li>
+                    <li>Similar past declarations are unverified and can repeat filing mistakes.</li>
+                    <li>Accuracy falls on later years and new products. The next HS edition takes effect on 1 January 2028.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Responsible Use -->
+<h3 class="fw-bold mb-3" style="color: var(--color-primary);">Responsible Use & Privacy</h3>
+<p>Always verify codes with the <a href="https://finder.tariffcommission.gov.ph/" target="_blank" rel="noopener noreferrer">Tariff Finder</a> or an advance ruling. <strong>No product descriptions are stored</strong> by this tool.</p>
+
+{% endblock %}

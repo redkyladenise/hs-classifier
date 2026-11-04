@@ -1,4 +1,4 @@
-from flask import Blueprint, redirect, url_for
+from flask import Blueprint, redirect, url_for, render_template
 
 bp = Blueprint('main', __name__)
 
@@ -8,8 +8,8 @@ def index():
 
 @bp.route('/about')
 def about():
-    return "<h1>About Page (Coming Soon)</h1>"
+    return render_template('about.html')
 
 @bp.route('/help')
 def help():
-    return "<h1>Help Page (Coming Soon)</h1>"
+    return render_template('help.html')
