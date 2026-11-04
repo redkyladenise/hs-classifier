@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}HS Classifier{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendor/bootstrap/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/site.css') }}">
+</head>
+<body class="d-flex flex-column min-vh-100">
+    
+    <!-- Skip Link for Accessibility -->
+    <a href="#main-content" class="visually-hidden-focusable">Skip to main content</a>
+    
+    <!-- Disclaimer Notice -->
+    <div class="text-center py-2 border-bottom" style="background-color: var(--color-info-bg); color: var(--color-info-text); font-size: 0.9rem;">
+        Assistance tool, not an official classification.
+    </div>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: var(--color-primary);">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="/">HS Classifier</a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link {% if request.path == '/about' %}active fw-bold{% endif %}" href="/about">About</a>
+                <a class="nav-link {% if request.path == '/help' %}active fw-bold{% endif %}" href="/help">Help</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Block -->
+    <main id="main-content" class="container py-4 flex-grow-1">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center py-4 mt-5 border-top" style="background-color: var(--color-surface); color: var(--color-text-muted); font-size: 0.9rem;">
+        <p class="mb-1">
+            Data Sources: 
+            <a href="https://customs.gov.ph" target="_blank" rel="noopener noreferrer" style="color: var(--color-primary); text-decoration: none;">Bureau of Customs</a>, 
+            <a href="https://data.bettergov.ph/datasets/21" target="_blank" rel="noopener noreferrer" style="color: var(--color-primary); text-decoration: none;">BetterGov.ph</a>
+        </p>        
+        <p class="mb-0">Assistance tool, not an official classification.</p>
+    </footer>
+
+    <!-- Bootstrap JavaScript -->
+    <script src="{{ url_for('static', filename='vendor/bootstrap/bootstrap.bundle.min.js') }}"></script>
+</body>
+</html>
