@@ -1,0 +1,29 @@
+:root {
+    /* Main Colors from the reference photo */
+    --color-primary: #0d5379;       /* Navy Blue */
+    --color-bg: #f5f7fa;            /* Very light gray/blue background */
+    --color-surface: #ffffff;       /* White cards */
+    --color-text: #333333;          /* Dark gray text */
+    --color-text-muted: #6c757d;    /* Lighter gray text */
+    --color-border: #e0e4e8;        /* Soft borders */
+
+    /* Notice Colors */
+    --color-info-bg: #e8f4f8;
+    --color-info-text: #0d5379;
+    --color-warning-bg: #fff3cd;
+    --color-warning-text: #856404;
+
+    /* Focus Outline for Keyboard Users */
+    --color-focus: #3b82f6;
+
+    /* Clean System Fonts */
+    --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    margin: 0;
+    padding: 0;
+}
