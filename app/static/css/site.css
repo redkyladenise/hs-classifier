@@ -1,11 +1,11 @@
 :root {
-    /* Main Colors from the reference photo */
-    --color-primary: #0d5379;       /* Navy Blue */
-    --color-bg: #f5f7fa;            /* Very light gray/blue background */
-    --color-surface: #ffffff;       /* White cards */
-    --color-text: #333333;          /* Dark gray text */
-    --color-text-muted: #6c757d;    /* Lighter gray text */
-    --color-border: #e0e4e8;        /* Soft borders */
+    /* Main Colors */
+    --color-primary: #0d5379; 
+    --color-bg: #f5f7fa;
+    --color-surface: #ffffff; 
+    --color-text: #333333;
+    --color-text-muted: #6c757d;
+    --color-border: #e0e4e8; 
 
     /* Notice Colors */
     --color-info-bg: #e8f4f8;
