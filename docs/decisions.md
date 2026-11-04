@@ -357,3 +357,19 @@ The baseline SGD model is naturally robust to noise; injecting 20% label noise o
 **Context:** Track E requires displaying masked nearest-neighbor descriptions to prove retrieval accuracy.
 **Decision:** We are permitted to display these excerpts. 
 **Rationale:** The data license resolution allows for the display of short, heavily anonymized excerpts for evaluation and demonstration purposes. By enforcing a strict masking pipeline (destroying brands, company names, contact info, models, and 5+ digit numbers), limiting strings to ~120 characters, and dropping over-masked outputs, the displayed text is stripped of all proprietary or sensitive customs data while retaining enough generic product context to validate the ML model's retrieval logic.
+
+# Track G: 
+## Phase 1 (Static Pages) 
+
+- **Static-first build:** No database, no cookies, no sessions. The site currently serves purely static content.
+- **Deviation (No `copy.yaml`):** Replaced by inline template text with `<!-- SOURCE: ... -->` tags, traced in `docs/website_content_check.md`. Reason: repeated text lives in `partials/` (or `base.html`); About numbers are final Track A/B facts; volatile Track D/E numbers go through `site_results.json` later.
+- **Styling:** Local Bootstrap 5.3.8, pinned with its license file. Custom CSS uses the primary color `#123F36`.
+- **Temporary Redirect:** The `/` route redirects to `/about` (marked `TEMP` in `routes.py`).
+
+### Phase 2
+- Remove the temp home redirect once Classifier exists.
+- Add nav links for Classifier and Method & Evaluation when built.
+- Re-check Help "Reading the results" against real output.
+- Add Help troubleshooting once Classifier errors are defined.
+- Add About links to unbuilt pages when they exist.
+- Add deferred footer items later: advance-ruling link, last-updated line, model version + card link.

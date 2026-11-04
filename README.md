@@ -1,3 +1,10 @@
+
+## Running the Website
+To run the web application locally:
+1. Activate your virtual environment.
+2. Run: `flask --app app run --debug`
+3. Open `http://127.0.0.1:5000` in your browser.
+
 ## Pipeline Execution Order (Track A: Data Engineering)
 
 1. `scripts/a1_slim_transactions.py` -> Ingests raw data to `transactions_slim.parquet`.
