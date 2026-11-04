@@ -1,27 +1,21 @@
 :root {
-    /* Main Colors */
-    --color-primary: #0d5379; 
-    --color-bg: #f5f7fa;
+    --color-primary: #691e06;
+    --color-secondary: #8f250c;
+    --color-accent: #ca5310; 
+    
+    --color-bg: #fcf9f5; 
     --color-surface: #ffffff; 
-    --color-text: #333333;
+    --color-text: #333333;  
     --color-text-muted: #6c757d;
     --color-border: #e0e4e8; 
 
-    /* Notice Colors */
-    --color-info-bg: #e8f4f8;
-    --color-info-text: #0d5379;
-    --color-warning-bg: #fff3cd;
-    --color-warning-text: #856404;
+    --color-info-bg: #fbba72; 
+    --color-info-text: #691e06;
 
-    /* Focus Outline for Keyboard Users */
-    --color-focus: #3b82f6;
-
-    /* Clean System Fonts */
-    --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --color-focus: #ca5310;
 }
 
 body {
-    font-family: var(--font-family);
     background-color: var(--color-bg);
     color: var(--color-text);
     margin: 0;
