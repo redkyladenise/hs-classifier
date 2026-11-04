@@ -1,0 +1,194 @@
+/* ABOUT PAGE */
+
+/* 1st View: Hero Section */
+.hero-section {
+    min-height: calc(100vh - 120px); 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.feature-card {
+    background-color: transparent;
+    border: 1px solid var(--color-border) !important;
+    border-radius: 16px;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+.feature-card:hover {
+    background-color: var(--color-surface);
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.08) !important;
+}
+
+/* 2nd & 4th View: Full-Width Dark Sections */
+.about-dark {
+    background-color: var(--color-primary);
+    color: var(--color-bg);
+    padding: 5rem 0;
+    margin: 4rem 0 0;
+
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+}
+
+.about-dark .container {
+    max-width: 1000px;
+}
+
+.about-dark h2 {
+    color: var(--color-bg);
+    font-weight: 700;
+    font-size: 2rem;
+    margin-bottom: 1.25rem;
+}
+
+.about-dark p {
+    color: rgba(255, 255, 255, 0.85);
+    line-height: 1.75;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+}
+
+.how-it-works-card {
+    background-color: var(--color-secondary);
+    border-radius: 14px;
+    padding: 1.75rem 1.5rem;
+    height: 100%;
+}
+
+.how-it-works-card h4 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 1.25rem;
+    color: var(--color-bg);
+}
+
+.process-list {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+.process-list li {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+}
+
+/*3rd View: Scope Chapters*/
+.scope-chapter {
+    padding: 5rem 0;
+    text-align: center;
+}
+
+.scope-chapter h2 {
+    font-weight: 700;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: var(--color-text);
+}
+
+.scope-chapter-intro {
+    color: var(--color-text-muted);
+    margin-bottom: 2.5rem;
+    line-height: 1.7;
+    max-width: 750px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#section-3-list {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+}
+
+.scope-chapter-item {
+    display: flex;
+    align-items: center;
+    justify-content: center; 
+    text-align: center;
+    gap: 0.75rem;
+    color: var(--color-text);
+    line-height: 1.5;
+    font-size: 0.95rem;
+    padding: 1.25rem 1.5rem; 
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    background: var(--color-bg);
+    transition: all 0.2s ease-in-out;
+}
+
+.scope-chapter-item:hover {
+    border-color: var(--color-primary);
+    background: var(--color-surface);
+}
+
+/* 4th View: Data disclaimer / Limitations */
+.disclaimer-section {
+    background-color: var(--color-primary);
+    color: var(--color-bg);
+    padding: 5rem 0;
+    
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+    
+    margin-bottom: 0 !important; 
+}
+
+.disclaimer-section h2 {
+    font-weight: 700;
+    font-size: 2rem;
+    color: var(--color-bg);
+    margin-bottom: 1rem;
+}
+
+.disclaimer-section > .container > p {
+    color: rgba(255, 255, 255, 0.85);
+    line-height: 1.75;
+    font-size: 1rem;
+    margin-bottom: 2.5rem;
+    text-align: center;
+    max-width: 750px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.disclaimer-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+}
+
+.disclaimer-item {
+    display: flex;
+    align-items: center;
+    justify-content: center; 
+    text-align: center;
+    gap: 1rem;
+    color: rgba(255, 255, 255, 0.85);
+    line-height: 1.5;
+    font-size: 0.95rem;
+    padding: 1.25rem 1.5rem;
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 12px;
+    transition: all 0.2s ease-in-out;
+}
+
+.disclaimer-item:hover {
+    border-color: var(--color-bg);
+    background: var(--color-secondary);
+}
