@@ -10,6 +10,6 @@ def index():
 def about():
     return render_template('about.html')
 
-@bp.route('/help')
+@bp.route('/guide')
 def help():
-    return render_template('help.html')
+    return render_template('guide.html')
