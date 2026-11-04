@@ -3,9 +3,9 @@ import numpy as np
 import scipy.sparse as sp
 import pandas as pd
 from pathlib import Path
-# Note: Adjust these imports if your folder structure differs
 from src.hsclf.data.normalize import normalize_light
 from src.hsclf.models.features import FeatureExtractor
+from src.hsclf.retrieval.mask import mask_description
 
 class RetrievalEngine:
     def __init__(self, idf_path='data/processed/idf_main.npy', 
@@ -23,6 +23,12 @@ class RetrievalEngine:
         # Hash-map optimization: Set group_l1 as index for instant code lookups
         self.codes_df = pd.read_parquet(retrieval_codes_path).set_index('group_l1')
         self.matrix_cache = {}
+        
+        # Load text dictionary for E7 examples
+        self.texts_df = pd.read_parquet(
+            'data/interim/norm_descriptions.parquet',
+            columns=['desc_norm_id', 'desc_norm']
+        ).set_index('desc_norm_id')
 
     def _load_matrix(self, chapter):
         if chapter not in self.matrix_cache:
@@ -32,12 +38,12 @@ class RetrievalEngine:
                 
             path = f'data/processed/retrieval/index_ch{chapter}.npz'
             if os.path.exists(path):
-                self.matrix_cache[chapter] = sp.load_npz(path)
+                self.matrix_cache[chapter] = sp.load_npz(path).tocsr()
             else:
                 self.matrix_cache[chapter] = None
                 
         return self.matrix_cache[chapter]
-    def query(self, raw_text, routed_chapters, top_k=5, min_similarity=0.5, split_share=0.60):
+    def query(self, raw_text, routed_chapters, top_k=5, min_similarity=0.5, split_share=0.60, show_examples=True):
         # 1. Normalize and Extract Math Features
         norm_result = normalize_light(raw_text)
         normalized_text = norm_result['desc_norm']
@@ -84,9 +90,50 @@ class RetrievalEngine:
         # 4. Instant hash-lookup to get the historical codes
         final_results = top_matches.join(self.codes_df, on='group_l1').reset_index(drop=True)
         
-        # 5. Build Distribution and Flags based on File 6 rules
-        return self._build_distribution(final_results, min_similarity, split_share)
+        # 5. Generate Masked Examples (E7)
+        examples = []
+        if show_examples and not final_results.empty:
+            max_sim = final_results['similarity'].max()
+            if max_sim >= min_similarity:
+                # Optimized reindex mapping instead of merge
+                final_with_text = final_results.copy()
+                final_with_text['desc_norm'] = (
+                    self.texts_df['desc_norm']
+                    .reindex(final_with_text['group_l1'].values)
+                    .values
+                )
+                final_with_text = (
+                    final_with_text
+                    .dropna(subset=['desc_norm'])
+                    .drop_duplicates(subset=['group_l1'])
+                )
 
+                # Process top 3 valid examples
+                for _, row in final_with_text.iterrows():
+                    if len(examples) >= 3:
+                        break
+                    if row['similarity'] < min_similarity:
+                        continue
+                        
+                    raw_text = row['desc_norm']
+                    masked = mask_description(raw_text)
+                    if masked is None:
+                        continue # Dropped due to over-masking
+                        
+                    examples.append({
+                        "example_id": row['group_l1'],
+                        "original_text": raw_text,
+                        "text": masked,
+                        "similarity": round(row['similarity'], 2),
+                        "label": "very similar" if row['similarity'] >= 0.90 else "similar",
+                        "codes": {row['code']: row['declaration_count']}
+                    })
+
+        # 6. Build Distribution and Flags based on File 6 rules
+        result_dict = self._build_distribution(final_results, min_similarity, split_share)
+        result_dict['examples'] = examples
+        return result_dict
+    
     def _build_distribution(self, df, min_sim, split_share):
         if df.empty:
             return self._empty_result()
@@ -138,7 +185,7 @@ class RetrievalEngine:
         return {
             "neighbors_df": pd.DataFrame(), "distribution": pd.DataFrame(), "invalid_dropped": 0, 
             "total_declarations": 0, "total_descriptions": 0,
-            "max_similarity": 0.0, "no_close_match": True, "split_notice": False
+            "max_similarity": 0.0, "no_close_match": True, "split_notice": False, "examples": []
         }
 
     def batch_search(self, df, text_col='desc_norm', chapter_col='routed_chapters', 

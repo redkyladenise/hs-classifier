@@ -352,3 +352,8 @@ The baseline SGD model is naturally robust to noise; injecting 20% label noise o
 ### E3: Retrieval Display Rules Frozen
 - **display_level (4):** Frozen at Level 4 (Heading) because Level 4 Hit@5 was 64.05%, while Level 6 dropped below the 60% constraint (50.00%).
 - **min_similarity (0.5):** Frozen at 0.5 because it is the lowest band where Level-6 Hit@5 maintained the minimum 50% threshold (scoring 53.92%).
+
+## E7: Data License and Excerpt Display
+**Context:** Track E requires displaying masked nearest-neighbor descriptions to prove retrieval accuracy.
+**Decision:** We are permitted to display these excerpts. 
+**Rationale:** The data license resolution allows for the display of short, heavily anonymized excerpts for evaluation and demonstration purposes. By enforcing a strict masking pipeline (destroying brands, company names, contact info, models, and 5+ digit numbers), limiting strings to ~120 characters, and dropping over-masked outputs, the displayed text is stripped of all proprietary or sensitive customs data while retaining enough generic product context to validate the ML model's retrieval logic.

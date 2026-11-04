@@ -105,7 +105,7 @@ track_d:
 track_e:
   memory_ceiling_gb: 0.68       # Safest limit based on your machine
   retrieval_k: 5                # How many past declarations to retrieve
-  show_examples: false          # Set to true later if license is resolved
+  show_examples: true           # Set to true later if license is resolved
   split_share: 0.60             # Triggers warning if top code has less than 60% agreement
   min_example_tx: 20            # Hide items that haven't been imported at least 20 times
   vague_max_words: 2            # Flag descriptions with 2 words or fewer
