@@ -86,6 +86,7 @@ max_eval_hours: 12
 band_high: 0.9
 band_low: 0.6
 t_oos: 0.3788150815057074
+# t_oos: 0.05
 
 track_d:
   downweight_factor: 0.5
