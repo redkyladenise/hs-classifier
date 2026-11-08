@@ -83,8 +83,14 @@ node_stream_threshold: 150000
 memory_ceiling_gb: 0.76
 max_train_hours: 6
 max_eval_hours: 12
-band_high: 0.9
-band_low: 0.6
+# --- Track C6 Confidence Bands ---
+confidence_bands:
+  level_8:
+    high: 0.75
+    med: 0.50
+  level_2:
+    high: 0.90
+    med: 0.60
 t_oos: 0.3788150815057074
 
 track_d:

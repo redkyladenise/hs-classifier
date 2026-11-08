@@ -3,13 +3,25 @@
 ## 1. Executive Summary
 This report details the comprehensive evaluation of the hierarchical HS code classifier across 5 scoped chapters. The evaluation focuses on business-critical operational metrics: conceptual drift over time, automation workload routing, and hierarchical error forensics.
 
-## 2. Headline Metrics (Unseen Baseline)
-- **Accuracy (M1 / M2 / M3 at L8):** 38.8% / 32.8% / 33.1%
-- **Top-5 Accuracy (L4 / L6 / L8):** 64.6% / 59.8% / 54.0%
-- **Macro-F1 (L2 / L4 / L6 / L8):** 0.783 / 0.562 / 0.375 / 0.282
-- **Cohen's Kappa (L2):** 0.733
-- **Baseline Comparisons (L8):** Attainment Ratio: 0.415 | Lift vs Majority: 0.388
-- **Temporal Drift (Y1/2024 M1 L8):** 36.6%
+## 2. Headline Metrics
+
+- **Accuracy (M1 at L2 / L4 / L6 / L8):**
+  - **Unseen:** 81.0% / 65.8% / 48.8% / 38.8%
+  - **Y1:** 80.0% / 63.9% / 46.6% / 36.6%
+  - **Y2:** 79.9% / 63.9% / 46.3% / 35.8%
+- **Top-5 Accuracy (M1 at L4 / L6 / L8):**
+  - **Unseen:** 76.1% / 70.5% / 66.6%
+  - **Y1:** 75.4% / 69.9% / 63.0%
+  - **Y2:** 75.3% / 69.4% / 69.4%
+- **Macro-F1 (L2 / L4 / L6 / L8):**
+  - **Unseen:** 0.783 / 0.562 / 0.375 / 0.282
+  - **Y1:** 0.777 / 0.563 / 0.343 / 0.220
+  - **Y2:** 0.780 / 0.585 / 0.395 / 0.235
+- **Cohen's Kappa (L2):** 0.733 / 0.724 / 0.723 (Unseen / Y1 / Y2)
+- **Baseline Comparisons (L8):**
+  - **Unseen:** Majority Rate: 4.55% | Lift vs Majority: +34.25%
+  - **Y1 (2024):** Majority Rate: 4.42% | Lift vs Majority: +32.18% *(36.6 - 4.42)*
+  - **Y2 (2025):** Majority Rate: 4.20% | Lift vs Majority: +31.60%
 
 ## 3. Reading Guide
 - **Unseen:** A holdout test set drawn from the exact same timeframe as the training data (2023-2024).

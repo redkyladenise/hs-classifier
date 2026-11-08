@@ -24,7 +24,7 @@ def run_c8_3a_headline_metrics():
         print(f"\n========================================")
         print(f"  SCENARIO: {sc_name.upper()}")
         
-        # 1. BUILD THE SCORECARD
+# 1. BUILD THE SCORECARD
         query_scorecard = f"""
         WITH truth_base AS (
             SELECT 
@@ -71,6 +71,11 @@ def run_c8_3a_headline_metrics():
                 (SELECT COALESCE(SUM(tb.tx_count), 0) FROM truth_base tb WHERE tb.group_l1 = p.group_l1 AND tb.hd4 = SUBSTRING(p.pred_1, 1, 4)) as m1_l4_tx,
                 (SELECT COALESCE(SUM(tb.tx_count), 0) FROM truth_base tb WHERE tb.group_l1 = p.group_l1 AND tb.ch2 = SUBSTRING(p.pred_1, 1, 2)) as m1_l2_tx,
                 
+                -- M1 Logic Top-5 (Transaction Weighted)
+                (SELECT COALESCE(SUM(tb.tx_count), 0) FROM truth_base tb WHERE tb.group_l1 = p.group_l1 AND tb.ahtn8 IN (p.pred_1, p.pred_2, p.pred_3, p.pred_4, p.pred_5)) as m1_top5_l8_tx,
+                (SELECT COALESCE(SUM(tb.tx_count), 0) FROM truth_base tb WHERE tb.group_l1 = p.group_l1 AND tb.sh6 IN (SUBSTRING(p.pred_1,1,6), SUBSTRING(p.pred_2,1,6), SUBSTRING(p.pred_3,1,6), SUBSTRING(p.pred_4,1,6), SUBSTRING(p.pred_5,1,6))) as m1_top5_l6_tx,
+                (SELECT COALESCE(SUM(tb.tx_count), 0) FROM truth_base tb WHERE tb.group_l1 = p.group_l1 AND tb.hd4 IN (SUBSTRING(p.pred_1,1,4), SUBSTRING(p.pred_2,1,4), SUBSTRING(p.pred_3,1,4), SUBSTRING(p.pred_4,1,4), SUBSTRING(p.pred_5,1,4))) as m1_top5_l4_tx,
+
                 -- M2 Logic (Description Weighted Majority)
                 CASE WHEN p.pred_1 = l8.code THEN 1 ELSE 0 END as m2_l8,
                 CASE WHEN SUBSTRING(p.pred_1, 1, 6) = l6.code THEN 1 ELSE 0 END as m2_l6,
@@ -82,11 +87,6 @@ def run_c8_3a_headline_metrics():
                 CASE WHEN list_contains(vl.valid_l6, SUBSTRING(p.pred_1, 1, 6)) THEN 1 ELSE 0 END as m3_l6,
                 CASE WHEN list_contains(vl.valid_l4, SUBSTRING(p.pred_1, 1, 4)) THEN 1 ELSE 0 END as m3_l4,
                 CASE WHEN list_contains(vl.valid_l2, SUBSTRING(p.pred_1, 1, 2)) THEN 1 ELSE 0 END as m3_l2,
-                
-                -- Top-K Curves (L8, L6, L4)
-                CASE WHEN list_has_any([p.pred_1, p.pred_2, p.pred_3, p.pred_4, p.pred_5], [l8.code]) THEN 1 ELSE 0 END as top5_l8,
-                CASE WHEN list_has_any(list_transform([p.pred_1, p.pred_2, p.pred_3, p.pred_4, p.pred_5], x -> SUBSTRING(x, 1, 6)), [l6.code]) THEN 1 ELSE 0 END as top5_l6,
-                CASE WHEN list_has_any(list_transform([p.pred_1, p.pred_2, p.pred_3, p.pred_4, p.pred_5], x -> SUBSTRING(x, 1, 4)), [l4.code]) THEN 1 ELSE 0 END as top5_l4,
                 
                 l8.code as true_l8, p.pred_1 as pred_l8,
                 l4.code as true_l4, SUBSTRING(p.pred_1, 1, 4) as pred_l4,
@@ -109,7 +109,7 @@ def run_c8_3a_headline_metrics():
             SUM(m2_l8) as m2_l8_sum, SUM(m2_l6) as m2_l6_sum, SUM(m2_l4) as m2_l4_sum, SUM(m2_l2) as m2_l2_sum,
             SUM(m3_l8) as m3_l8_sum, SUM(m3_l6) as m3_l6_sum, SUM(m3_l4) as m3_l4_sum, SUM(m3_l2) as m3_l2_sum,
             
-            SUM(top5_l8) as top5_l8_sum, SUM(top5_l6) as top5_l6_sum, SUM(top5_l4) as top5_l4_sum
+            SUM(m1_top5_l8_tx) as m1_top5_l8_sum, SUM(m1_top5_l6_tx) as m1_top5_l6_sum, SUM(m1_top5_l4_tx) as m1_top5_l4_sum
         FROM scored
         GROUP BY group_l2
         """
@@ -124,7 +124,7 @@ def run_c8_3a_headline_metrics():
             'm1_l8', 'm1_l6', 'm1_l4', 'm1_l2',
             'm2_l8', 'm2_l6', 'm2_l4', 'm2_l2',
             'm3_l8', 'm3_l6', 'm3_l4', 'm3_l2',
-            'top5_l8', 'top5_l6', 'top5_l4'
+            'm1_top5_l8', 'm1_top5_l6', 'm1_top5_l4'
         ]
         boot_results = {m: [] for m in metrics}
         

@@ -17,9 +17,9 @@ Handled models were trained using the frozen hyperparameters and class eligibili
 The models were evaluated on the 100,000-record `val_cal` dataset. The raw baseline established a clear directional advantage over all handled variants. 
 At Level 8 (M2 Top-1), the scores and paired intervals were:
 * **Raw (`main`)**: 0.3827
-* **H1 (`main_h1`)**: 0.3642 (95% CI: [-1.98%, -1.73%])
+* **H1 (`main_h1`)**: 0.3641 (95% CI: [-1.98%, -1.73%])
 * **H2 (`main_h2`)**: 0.3628 (95% CI: [-2.13%, -1.85%])
-* **H3 (`main_h3`)**: 0.3686 (95% CI: [-1.50%, -1.26%])
+* **H3 (`main_h3`)**: 0.3689 (95% CI: [-1.50%, -1.26%])
 
 ## D6: Audit and Test Confirmation
 The relative ranking established in validation was confirmed on a locked 300,000-record test sample. The raw baseline (0.3897) outperformed the highest-ranked handled variant, H3 (0.3772), with negative paired cluster-bootstrap differences across overall, consistent, and conflict-prone splits. Furthermore, audit-sample evaluations indicated that heuristic data handling reduced agreement with plausibility-checked labels compared to the raw baseline.
