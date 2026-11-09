@@ -32,4 +32,9 @@ def create_app():
         response.headers['X-Frame-Options'] = 'DENY'
         return response
 
+    app.config['USE_STUB'] = False
+    app.config['MAX_BATCH_ROWS'] = 200
+    app.config['BATCH_CHUNK'] = 5
+    app.config['MAX_CHARS'] = 500
+    
     return app

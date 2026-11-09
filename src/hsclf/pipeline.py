@@ -45,10 +45,10 @@ class HSPipeline:
         self.retrieval_engine = RetrievalEngine()
 
         self.messages = {
-            8: "Confident down to the tariff line. Please still verify before declaring.",
-            6: "For Human Verification: confident down to the subheading. Please verify the tariff line.",
-            4: "For Human Verification: confident down to the heading. Please verify the rest.",
-            2: "For Human Verification: confident down to the chapter. Please verify the rest.",
+            8: "Confident down to the tariff line (8-digit). Please still verify before declaring.",
+            6: "For Human Verification: Confident down to the subheading (6-digit). Please verify the tariff line.",
+            4: "For Human Verification: Confident down to the heading (4-digit). Please verify the rest.",
+            2: "For Human Verification: Confident down to the chapter (2-digit). Please verify the rest.",
             None: "Needs human verification at every level."
         }
 
@@ -73,7 +73,7 @@ class HSPipeline:
         norm_text = self.normalize_text(raw_text)
         
         if self.fast_length_check(norm_text):
-            return {"status": "out_of_scope", "reason": "Text too short"}
+            return {"status": "out_of_scope", "reason": "Text is too short"}
             
         if self.extractor and self.extractor.idf_weights is not None:
             features = self.extractor.transform([norm_text])

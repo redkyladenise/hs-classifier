@@ -20,6 +20,7 @@
             
             <div class="collapse navbar-collapse" id="navbarNav">
                 <div class="navbar-nav ms-auto">
+                    <a class="nav-link {% if request.path == '/' %}active fw-bold{% endif %}" href="/">Classifier</a>
                     <a class="nav-link {% if request.path == '/about' %}active fw-bold{% endif %}" href="/about">About</a>
                     <a class="nav-link {% if request.path == '/guide' %}active fw-bold{% endif %}" href="/guide">Help</a>
                 </div>
@@ -44,5 +45,8 @@
 
     <!-- Bootstrap JavaScript -->
     <script src="{{ url_for('static', filename='vendor/bootstrap/bootstrap.bundle.min.js') }}"></script>
+
+    {% block scripts %}{% endblock %}
+</body>
 </body>
 </html>

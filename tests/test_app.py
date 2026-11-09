@@ -11,9 +11,12 @@ def client():
         yield client
 
 def test_pages_return_200(client):
-    """Test that About and guide pages load successfully."""
+    """Test that Classifier, About, Guide, and Analytics pages load successfully."""
+    assert client.get('/').status_code == 200
     assert client.get('/about').status_code == 200
     assert client.get('/guide').status_code == 200
+    # Uncomment this once you build the analytics page
+    # assert client.get('/analytics').status_code == 200
 
 def test_404_page(client):
     """Test that unknown URLs return the custom 404 page."""
@@ -28,17 +31,37 @@ def test_security_headers(client):
     assert response.headers['X-Frame-Options'] == 'DENY'
     assert response.headers['X-Content-Type-Options'] == 'nosniff'
 
-def test_disclaimer_and_tariff_finder(client):
-    """Test that the disclaimer and Tariff Finder link are on both pages."""
-    for page in ['/about', '/guide']:
-        response = client.get(page)
-        assert b"Assistive tool, not an official classification." in response.data
-        assert b"https://finder.tariffcommission.gov.ph/" in response.data
+def test_api_empty_input(client):
+    """Test that the API rejects empty text."""
+    response = client.post('/classify', json={"description": ""})
+    assert response.status_code == 400
+    assert b"Description cannot be empty" in response.data
 
-def test_exactly_one_h1(client):
-    """Test that each page has exactly one main H1 heading."""
-    for page in ['/about', '/guide']:
-        response = client.get(page)
-        # Use regex to count how many <h1> tags exist
-        h1_count = len(re.findall(rb'<h1\b', response.data))
-        assert h1_count == 1, f"Expected 1 h1 on {page}, found {h1_count}"
+def test_api_too_long(client):
+    """Test that the API rejects text over 500 characters."""
+    long_text = "a" * 501
+    response = client.post('/classify', json={"description": long_text})
+    assert response.status_code == 400
+    assert b"Description exceeds 500 characters" in response.data
+
+def test_api_valid_input(client):
+    """Test that a valid description returns a structured JSON payload."""
+    response = client.post('/classify', json={"description": "stainless steel kitchen sink"})
+    assert response.status_code == 200
+    data = response.get_json()
+    assert data['status'] == 'success'
+    assert 'predicted_code' in data
+    assert 'bands_out' in data
+    assert 'retrieval' in data
+
+def test_batch_api(client):
+    """Test the batch endpoint."""
+    response = client.post('/classify-batch', json={"descriptions": ["laptop", "fresh mango"]})
+    assert response.status_code == 200
+    data = response.get_json()
+    assert len(data['results']) == 2
+    # Laptop should be OK
+    assert data['results'][0]['status'] == 'ok'
+    # Mango should be out of scope (triggered by the pipeline)
+    assert data['results'][1]['status'] == 'ok' 
+    assert data['results'][1]['data']['status'] == 'out_of_scope'

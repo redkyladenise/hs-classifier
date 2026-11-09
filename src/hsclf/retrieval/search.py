@@ -44,10 +44,13 @@ class RetrievalEngine:
                 
         return self.matrix_cache[chapter]
     
-    def query(self, raw_text, routed_chapters, top_k=5, min_similarity=0.5, split_share=0.60, show_examples=True):
+    def query(self, raw_text, routed_chapters, top_k=5, min_similarity=0.5, split_share=0.60, show_examples=True, vague_max_words=2, vague_low_share_max=0.40):
         # 1. Normalize and Extract Math Features
         norm_result = normalize_light(raw_text)
         normalized_text = norm_result['desc_norm']
+
+        is_short_text = len(normalized_text.split()) <= vague_max_words
+
         query_vector = self.extractor.transform([normalized_text])
         
         all_top_indices, all_top_desc_ids, all_top_sims, all_top_chapters = [], [], [], []
@@ -139,11 +142,18 @@ class RetrievalEngine:
                     })
 
         # 6. Build Distribution and Flags based on File 6 rules
-        result_dict = self._build_distribution(final_results, min_similarity, split_share)
+        result_dict = self._build_distribution(final_results, min_similarity, split_share, vague_low_share_max)
+
+        result_dict['is_vague'] = bool(
+            is_short_text or 
+            result_dict.get('is_vague_distribution', False) or 
+            result_dict.get('no_close_match', False)
+        )
+        
         result_dict['examples'] = examples
         return result_dict
 
-    def _build_distribution(self, df, min_sim, split_share):
+    def _build_distribution(self, df, min_sim, split_share, vague_low_share_max=0.40):
         if df.empty:
             return self._empty_result()
             
@@ -156,9 +166,15 @@ class RetrievalEngine:
         
         if valid_codes.empty:
              return {
-                 "neighbors_df": df, "distribution": pd.DataFrame(), "invalid_dropped": invalid_dropped, 
-                 "total_declarations": 0, "total_descriptions": total_desc,
-                 "max_similarity": max_similarity, "no_close_match": no_close_match, "split_notice": False
+                 "neighbors_df": df, 
+                 "distribution": pd.DataFrame(), 
+                 "invalid_dropped": invalid_dropped, 
+                 "total_declarations": 0, 
+                 "total_descriptions": total_desc,
+                 "max_similarity": max_similarity, 
+                 "no_close_match": no_close_match, 
+                 "split_notice": False, 
+                 "is_vague_distribution": True
              }
             
         dist = valid_codes.groupby('code')['declaration_count'].sum().reset_index()
@@ -168,6 +184,8 @@ class RetrievalEngine:
         dist['share'] = dist['declaration_count'] / total_tx
         
         split_notice = bool(dist.iloc[0]['share'] < split_share)
+
+        is_vague_distribution = bool(dist.iloc[0]['share'] <= vague_low_share_max)
 
         # Top 3 + Other logic
         if len(dist) > 3:
@@ -187,7 +205,8 @@ class RetrievalEngine:
             "total_descriptions": total_desc,
             "max_similarity": max_similarity,
             "no_close_match": no_close_match,
-            "split_notice": split_notice
+            "split_notice": split_notice,
+            "is_vague_distribution": is_vague_distribution
         }
 
     def _empty_result(self):
