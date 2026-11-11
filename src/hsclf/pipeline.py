@@ -23,8 +23,8 @@ class HSPipeline:
             
         self.bands = self.params.get('confidence_bands', {
             8: {'high': 0.75, 'med': 0.50},
-            6: {'high': 0.80, 'med': 0.55},
-            4: {'high': 0.85, 'med': 0.60},
+            6: {'high': 0.75, 'med': 0.50},
+            4: {'high': 0.90, 'med': 0.60},
             2: {'high': 0.90, 'med': 0.60}
         })
         self.t_oos = self.params.get('t_oos', 0.3788)

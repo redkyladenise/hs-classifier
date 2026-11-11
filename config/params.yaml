@@ -85,6 +85,7 @@ max_train_hours: 6
 max_eval_hours: 12
 band_high: 0.9
 band_low: 0.6
+# bands: 0.75-0.50 for level 6 and 8
 t_oos: 0.3788150815057074
 # t_oos: 0.05
 

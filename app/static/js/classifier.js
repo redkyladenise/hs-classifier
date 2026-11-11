@@ -47,8 +47,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // Dynamic Thresholds Map
     const thresholds = {
         8: { high: 75, med: 50 },
-        6: { high: 80, med: 55 },
-        4: { high: 85, med: 60 },
+        6: { high: 75, med: 50 },
+        4: { high: 90, med: 60 },
         2: { high: 90, med: 60 }
     };
     const chapterNames = {
@@ -147,10 +147,15 @@ document.addEventListener("DOMContentLoaded", () => {
                     `;
                 }
                 // 2. Process Other Candidates
+                
                 let alternativesHtml = "";
                 if (data.alternatives && data.alternatives.length > 0) {
-                    // Added formatCode(m.code, m.code.length) to add the periods dynamically
-                    const uniqueAlts = [...new Set(data.alternatives.map(m => formatCode(m.code, m.code.length)))].slice(0, 5);
+                    // Sort by probability descending, then deduplicate and format
+                    const uniqueAlts = [...new Set(
+                        data.alternatives
+                            .sort((a, b) => b.prob - a.prob)
+                            .map(m => formatCode(m.code, m.code.length))
+                    )].slice(0, 5);
                     
                     alternativesHtml = `
                         <div class="d-flex align-items-center justify-content-center text-muted small mt-4">
