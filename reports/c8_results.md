@@ -10,17 +10,20 @@ This report details the comprehensive evaluation of the hierarchical HS code cla
   - **Y1:** 80.0% / 63.9% / 46.6% / 36.6%
   - **Y2:** 79.9% / 63.9% / 46.3% / 35.8%
 - **Top-5 Accuracy (M1 at L4 / L6 / L8):**
-  - **Unseen:** 76.1% / 70.5% / 66.6%
-  - **Y1:** 75.4% / 69.9% / 63.0%
-  - **Y2:** 75.3% / 69.4% / 69.4%
+  - **Unseen:** 76.1% / 70.5% / 63.8%
+  - **Y1:** 75.0% / 69.4% / 62.4%
+  - **Y2:** 74.8% / 68.9% / 61.7%
 - **Macro-F1 (L2 / L4 / L6 / L8):**
   - **Unseen:** 0.783 / 0.562 / 0.375 / 0.282
   - **Y1:** 0.777 / 0.563 / 0.343 / 0.220
   - **Y2:** 0.780 / 0.585 / 0.395 / 0.235
-- **Cohen's Kappa (L2):** 0.733 / 0.724 / 0.723 (Unseen / Y1 / Y2)
+- **Cohen's Kappa (L2 / L4):**
+  - **Unseen:** 0.733 / 0.631
+  - **Y1:** 0.724 / 0.620 
+  - **Y2:** 0.723 / 0.618
 - **Baseline Comparisons (L8):**
-  - **Unseen:** Majority Rate: 4.55% | Lift vs Majority: +34.25%
-  - **Y1 (2024):** Majority Rate: 4.42% | Lift vs Majority: +32.18% *(36.6 - 4.42)*
+  - **Unseen:** Majority Rate: 4.55% | Lift vs Majority: 34.3% 
+  - **Y1 (2024):** Majority Rate: 4.42% | Lift vs Majority: +32.16% *(36.6 - 4.42)*
   - **Y2 (2025):** Majority Rate: 4.20% | Lift vs Majority: +31.60%
 
 ## 3. Reading Guide
@@ -34,6 +37,7 @@ This report details the comprehensive evaluation of the hierarchical HS code cla
 The model demonstrates sensitivity to temporal drift and hierarchical complexity. Descriptions mapped to split subheadings perform significantly worse than single-line subheadings, isolating the model's primary weakness to 8-digit split disambiguation.
 
 ![Hierarchical Errors](figures/fig1_hierarchical_errors.png)
+![Hierarchical Errors (Unseen vs Y2)](figures/fig1_b_hierarchical_errors.png)
 
 ## 5. Confidence & Workload (Decision Support)
 Applying frozen confidence thresholds reveals the operational reality of the model: it functions best as a high-precision human-in-the-loop support tool rather than a lights-out automation engine.
