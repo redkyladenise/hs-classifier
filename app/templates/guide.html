@@ -1,0 +1,242 @@
+{% extends "base.html" %}
+
+{% block title %}Guide | HS Classifier{% endblock %}
+
+{% block content %}
+<!-- HEADER -->
+<section class="guide-hero text-center py-5">
+    <div class="container">
+        <h1 class="fw-bold mb-3" style="color: var(--color-primary);"> How to Use This Tool</h1>
+        <p class="lead text-muted mx-auto" style="max-width: 700px; font-size: 1.15rem; line-height: 1.6;">
+            Learn how the hierarchy works, how to write strong descriptions, and how to interpret your HS code classification results.
+        </p>
+    </div>
+</section>
+
+<!-- 1. HS CODE HIERARCHY -->
+<section class="guide-section bg-surface">
+    <div class="container" style="max-width: 800px;">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold" style="color: var(--color-primary);">Understanding the Hierarchy</h2>
+            <p class="text-muted">The Harmonized System (HS) and ASEAN Harmonized Tariff Nomenclature (AHTN) use a cascading numbering system. Here is what each level means.</p>
+        </div>
+
+        <div class="hierarchy-timeline">
+            <!-- Level 1 -->
+            <div class="timeline-step">
+                <div class="timeline-marker"></div>
+                <div class="timeline-content shadow-sm">
+                    <div class="d-flex align-items-center mb-2">
+                        <span class="badge bg-primary-custom me-3 py-2 px-3 fs-6">84</span>
+                        <h5 class="fw-bold mb-0" style="color: var(--color-primary);">2-Digit Chapter</h5>
+                    </div>
+                    <p class="text-muted mb-0">The top-level broad category of the customs code (e.g., Machinery and Mechanical Appliances).</p>
+                </div>
+            </div>
+            <!-- Level 2 -->
+            <div class="timeline-step">
+                <div class="timeline-marker"></div>
+                <div class="timeline-content shadow-sm">
+                    <div class="d-flex align-items-center mb-2">
+                        <span class="badge bg-primary-custom me-3 py-2 px-3 fs-6">8471</span>
+                        <h5 class="fw-bold mb-0" style="color: var(--color-primary);">4-Digit Heading</h5>
+                    </div>
+                    <p class="text-muted mb-0">The second level categorization grouping specific types of items within the chapter (e.g., Automatic data processing machines).</p>
+                </div>
+            </div>
+            <!-- Level 3 -->
+            <div class="timeline-step">
+                <div class="timeline-marker"></div>
+                <div class="timeline-content shadow-sm">
+                    <div class="d-flex align-items-center mb-2">
+                        <span class="badge bg-primary-custom me-3 py-2 px-3 fs-6">8471.30</span>
+                        <h5 class="fw-bold mb-0" style="color: var(--color-primary);">6-Digit HS Subheading</h5>
+                    </div>
+                    <p class="text-muted mb-0">The internationally recognized level shared by all World Customs Organization (WCO) countries (e.g., Portable computers under 10kg).</p>
+                </div>
+            </div>
+            <!-- Level 4 -->
+            <div class="timeline-step">
+                <div class="timeline-marker"></div>
+                <div class="timeline-content shadow-sm">
+                    <div class="d-flex align-items-center mb-2">
+                        <span class="badge bg-primary-custom me-3 py-2 px-3 fs-6">8471.30.20</span>
+                        <h5 class="fw-bold mb-0" style="color: var(--color-primary);">8-Digit AHTN Subheading</h5>
+                    </div>
+                    <p class="text-muted mb-0">The highly specific tariff line adopted strictly within ASEAN and the Philippines, determining the exact duty rate.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 2. WRITING A GOOD DESCRIPTION (Dark Section) -->
+<section class="guide-dark">
+    <div class="container" style="max-width: 1000px;">
+        <div class="row align-items-center g-5">
+            
+            <!-- Left Side: Instructions & Rules -->
+            <div class="col-lg-6">
+                <h2 class="fw-bold mb-4 text-white">Writing a Good Description</h2>
+                
+                <p style="color: rgba(255,255,255,0.85); font-size: 1.05rem; line-height: 1.7;">
+                    The model relies on matching physical and functional keywords to historical customs data. A single word like "parts" will return low confidence across multiple chapters. For the best accuracy, you may include these four elements:
+                </p>
+
+                <ol class="text-white mt-4 ps-3" style="font-size: 1.05rem; line-height: 2.2;">
+                    <li><strong style="color: var(--color-accent, #D4AF37);">Identity:</strong> What exactly is the item? (e.g., "dining chair")</li>
+                    <li><strong style="color: var(--color-accent, #D4AF37);">Material:</strong> What is it made of? (e.g., "stainless steel")</li>
+                    <li><strong style="color: var(--color-accent, #D4AF37);">Function:</strong> What does it do? (e.g., "for water supply")</li>
+                    <li><strong style="color: var(--color-accent, #D4AF37);">Specs:</strong> Size, capacity, or voltage (e.g., "2 inches")</li>
+                </ol>
+            </div>
+
+            <!-- Right Side: Examples Card -->
+            <div class="col-lg-6">
+                <div class="shadow-lg rounded-4 p-4 p-md-5" style="background-color: var(--color-secondary); border: 1px solid rgba(255,255,255,0.15); height: 100%;">
+                    
+                    <div class="d-flex align-items-center mb-4 text-white">
+                        <h3 class="fw-bold h5 mb-0">Example</h3>
+                    </div>
+                    <div>
+                        <div class="mb-4">
+                            <div class="d-flex align-items-center mb-1" style="color: #ff8686; font-size: 0.85rem; letter-spacing: 0.5px;">
+                                <svg class="me-2 d-block flex-shrink-0" xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/><path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/></svg>
+                                <span class="fw-bold text-white h6 mb-0">Vague Description</span>
+                            </div>
+                            <div class="text-white">"metal pipe" <em>(Lacks specific material, dimensions, and intended use)</em></div>
+                        </div>
+                        <div>
+                            <div class="d-flex align-items-center mb-1" style="color: #81e7d2; font-size: 0.85rem; letter-spacing: 0.5px;">
+                                <svg class="me-2 d-block flex-shrink-0" xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/><path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/></svg>
+                                <span class="fw-bold text-white h6 mb-0">Strong Description</span>
+                            </div>
+                            <div class="text-white fw-bold fst-italic">"Seamless stainless steel pipe, 2 inches diameter, for water supply"</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</section>
+
+<!-- 3. INTERPRETING RESULTS -->
+<section class="guide-section bg-surface">
+    <div class="container">
+        <h2 class="fw-bold mb-4 text-center d-flex align-items-center justify-content-center gap-2" style="color: var(--color-primary);">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                height="36px" width="36px" fill="currentColor">
+                <path d="M11,21V13.02q-1.6,0-3.07-0.61t-2.6-1.74T3.6,8.07T3,5V3H5Q6.58,3 8.05,3.61t2.6,1.74q0.78,0.78 1.29,1.7q0.51,0.92 0.79,1.97Q12.85,8.85 13,8.69q0.15-0.16 0.33-0.34q1.13-1.13 2.6-1.74T19,6h2V8q0,1.6-0.61,3.07t-1.74,2.6T16.06,15.4T13,16v5H11Zm0-10q0-1.2-0.46-2.29Q10.08,7.63 9.23,6.77Q8.38,5.93 7.29,5.46T5,5Q5,6.2 5.45,7.3t1.3,1.95t1.95,1.3T11,11Zm2,3q1.2,0 2.29-0.45t1.94-1.3t1.31-1.95T19,8q-1.2,0-2.3,0.46T14.75,9.77q-0.85,0.85-1.3,1.94T13,14Zm0,0Zm-2-3Z"/>
+            </svg>
+            Interpreting the Results
+        </h2>
+        <p class="text-center text-muted mb-5 mx-auto" style="max-width: 600px;">
+            The classifier displays several indicators to guide you make an informed decision. Here is what each element means.
+        </p>
+
+        <div class="row g-4 justify-content-center">
+            <div class="col-md-6 col-lg-4">
+                <div class="result-card h-100">
+                    <h5 class="fw-bold" style="color: var(--color-primary);">Confidence Badges</h5>
+                    <p class="text-muted mb-0 mt-2">Indicates how statistically sure the system is (High, Medium, Low). You must always manually review results labeled as <strong>Low</strong>.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="result-card h-100">
+                    <h5 class="fw-bold" style="color: var(--color-primary);">Deepest Confident Level</h5>
+                    <p class="text-muted mb-0 mt-2">A banner that tells you exactly how far down the hierarchy the model trusts its prediction before requiring your human judgment.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="result-card h-100">
+                    <h5 class="fw-bold" style="color: var(--color-primary);">Alternative Candidates</h5>
+                    <p class="text-muted mb-0 mt-2">The system's top 5 predictions. If the primary prediction looks incorrect, check these alternatives.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="result-card h-100">
+                    <h5 class="fw-bold" style="color: var(--color-primary);">Similar Past Declarations</h5>
+                    <p class="text-muted mb-0 mt-2">Examples of how similar descriptions were classified in historical data. Use this as a reference, not a legal guarantee.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="result-card h-100">
+                    <h5 class="fw-bold" style="color: var(--color-primary);">Vagueness Flag</h5>
+                    <p class="text-muted mb-0 mt-2">A warning triggered if your description lacks detail (e.g., just "parts"). Add material or function to improve the classification.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="result-card h-100">
+                    <h5 class="fw-bold" style="color: var(--color-primary);">Out-of-Scope Message</h5>
+                    <p class="text-muted mb-0 mt-2">Appears if your item falls outside the supported chapters. In this case, you may use outside resources directly.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 4. FAQ -->
+<section class="guide-section pb-5">
+    <div class="container" style="max-width: 800px;">
+        <h2 class="fw-bold mb-5 text-center" style="color: var(--color-primary);">Frequently Asked Questions</h2>
+        
+        <div class="accordion custom-accordion" id="faqAccordion">
+            <!-- Q1 -->
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                        How do I officially verify my final code?
+                    </button>
+                </h2>
+                <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        This tool serves only as a classification assistant and does not provide official or legally binding HS code determinations. Suggested codes may be cross-referenced with official resources such as the Philippine Tariff Book, relevant customs laws and regulations, or the <a href="https://finder.tariffcommission.gov.ph/" target="_blank" rel="noopener noreferrer" style="color: var(--color-secondary);">official Philippine Tariff Finder</a>. For complex or high-value goods, a formal Advance Ruling from the Tariff Commission may also be considered.
+                    </div>
+                </div>
+            </div>
+            <!-- Q2 -->
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                        Why are only certain chapters supported?
+                    </button>
+                </h2>
+                <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        We focused on the highest-volume chapters to ensure the model had enough historical data to learn accurately. These core chapters cover a significant portion of all in-scope trade.
+                    </div>
+                </div>
+            </div>
+            <!-- Q3 -->
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                        Why is the 8-digit code often labeled "Low" confidence?
+                    </button>
+                </h2>
+                <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        Importers frequently use brand names or vague descriptions. While the system can reliably deduce the general category (heading/subheading), assigning the precise 8-digit AHTN code often requires highly specific technical details and human context to review.
+                    </div>
+                </div>
+            </div>
+            <!-- Q4 -->
+            <div class="accordion-item border-transparent">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+                        Are my product descriptions saved?
+                    </button>
+                </h2>
+                <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        No. The website has no database or user accounts. We do not store or track any product descriptions you type into the classifier. 
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/guide.css') }}">
+{% endblock %}

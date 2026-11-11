@@ -1,0 +1,353 @@
+/* =========================================
+   TABS & INPUTS
+   ========================================= */
+.custom-tabs {
+    gap: 0.5rem;
+}
+.custom-tabs .nav-link {
+    color: var(--color-primary);
+    border-radius: 50rem;
+    font-weight: 600;
+    padding: 0.6rem 1.75rem;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+}
+.custom-tabs .nav-link:hover {
+    background-color: rgba(18, 63, 54, 0.05);
+}
+.custom-tabs .nav-link.active {
+    background-color: var(--color-primary);
+    color: white;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.custom-textarea {
+    background-color: #f8f9fa;
+    border: 2px solid transparent;
+    border-radius: 12px;
+    padding: 1rem;
+    transition: all 0.2s;
+    resize: none;
+}
+.custom-textarea:focus {
+    background-color: #ffffff;
+    border-color: var(--color-secondary);
+    box-shadow: 0 0 0 4px rgba(74, 124, 113, 0.15);
+}
+
+/* =========================================
+   FORMAL RESULT CARD STYLING
+   ========================================= */
+.result-card {
+    background-color: #ffffff;
+    border-radius: 8px; 
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+}
+.result-card.state-warning {
+    border: 1px solid #D4AF37; /* Amber */
+}
+.result-card.state-success {
+    border: 1px solid var(--color-primary); /* Green */
+}
+.result-card.state-error {
+    border: 1px solid #963F3F; /* Red */
+}
+
+/* -----------------------------------------
+   Centered Nested Folder Tree
+   ----------------------------------------- */
+.tree-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+}
+.tree-block {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    padding: 1rem 0;
+}
+.tree-row {
+    display: flex;
+    align-items: center;
+}
+.tree-branch {
+    color: #a0aec0;
+    margin-right: 0.75rem;
+    font-family: monospace;
+    font-size: 1.1rem;
+    line-height: 1;
+}
+.tree-label {
+    width: 100px;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--color-text-muted);
+    letter-spacing: 0.5px;
+}
+.tree-code {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--color-primary);
+    min-width: 120px;
+    margin-right: 1.5rem;
+    letter-spacing: 0.5px;
+}
+/* Indentations for hierarchy */
+.indent-1 { margin-left: 2rem; }
+.indent-2 { margin-left: 4rem; }
+.indent-3 { margin-left: 6rem; }
+
+@media (max-width: 576px) {
+    .indent-1 { margin-left: 1rem; }
+    .indent-2 { margin-left: 2rem; }
+    .indent-3 { margin-left: 3rem; }
+    .tree-label { width: 80px; }
+    .tree-code { min-width: 90px; margin-right: 0.5rem; font-size: 1.1rem; }
+}
+
+/* -----------------------------------------
+   Sharp Badges with Hover Context
+   ----------------------------------------- */
+.badge-custom {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.35rem 0.75rem;
+    border-radius: 50rem;
+    font-weight: 700;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: help;
+}
+
+.badge-high {
+    background-color: #123F36;
+    color: #ffffff;
+    border: 1px solid #123F36;
+}
+
+.badge-medium {
+    background-color: #D4AF37;
+    color: #ffffff;
+    border: 1px solid #D4AF37;
+}
+
+.badge-low {
+    background-color: #963F3F;
+    color: #ffffff;
+    border: 1px solid #963F3F;
+}
+
+.arrow-icon {
+    vertical-align: middle;
+    transform: translateY(-2px);
+}
+
+/* -----------------------------------------
+   Custom Tooltip Bubble
+   ----------------------------------------- */
+.has-tooltip {
+    position: relative;
+    cursor: help;
+}
+
+.tooltip-bubble {
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    bottom: 130%; /* Position right above the badge */
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    width: 220px;
+    background-color: #ffffff;
+    color: var(--color-text);
+    text-align: center;
+    padding: 0.75rem;
+    border-radius: 8px;
+    font-size: 0.7rem;
+    font-weight: 500;
+    line-height: 1.4;
+    text-transform: none;
+    letter-spacing: normal;
+    box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+    z-index: 100;
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+}
+
+/* The little triangle arrow pointing down */
+.tooltip-bubble::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -6px;
+    border-width: 6px;
+    border-style: solid;
+    border-color: #ffffff transparent transparent transparent;
+}
+
+/* Show bubble on hover */
+.has-tooltip:hover .tooltip-bubble {
+    visibility: visible;
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* -----------------------------------------
+   Two-Column Reference Section
+   ----------------------------------------- */
+.distribution-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 0.5rem;
+    margin-bottom: 0.5rem;
+    border-bottom: 1px solid #f1f5f9;
+}
+.distribution-row:last-child {
+    border-bottom: none;
+}
+.border-end-md {
+    border-right: 1px solid var(--color-primary);
+}
+@media (max-width: 767px) {
+    .border-end-md {
+        border-right: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+}
+
+/* =========================================
+   BATCH TABLE CLASSES
+   ========================================= */
+.status-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-left: 6px;
+}
+.dot-high { background-color: #123F36; }
+.dot-medium { background-color: #D4AF37; }
+.dot-low { background-color: #963F3F; }
+
+.kpi-card {
+    background-color: #ffffff;
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: 1.25rem;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+}
+.kpi-value {
+    font-size: 1.75rem;
+    font-weight: 800;
+    margin-bottom: 0.25rem;
+}
+.kpi-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+/* =========================================
+   PRINT STYLES (FORMAL DOCUMENT REPORT)
+   ========================================= */
+@media print {
+    /* Set standard document margins */
+    @page {
+        margin: 2cm;
+    }
+
+    /* Hide UI elements, navigation, and inputs */
+    .navbar, footer, .nav-tabs, .custom-tabs, #single .card, #batch .card, .btn, 
+    .container > .text-center.mb-5,
+    .border-top.d-flex.justify-content-end {
+        display: none !important;
+    }
+    
+    body {
+        background-color: #ffffff !important;
+        color: #000000 !important; /* Force black text for formal reading */
+    }
+    
+    .container {
+        max-width: 100% !important;
+        width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    /* 1. Remove the outer card border completely */
+    .result-card {
+        border: none !important; 
+        box-shadow: none !important;
+        margin: 0 !important;
+        border-radius: 0 !important;
+        page-break-inside: auto !important; /* Allows natural page breaks */
+    }
+
+    /* 3. Strip all web backgrounds & reset padding to align with paper margins */
+    div[style*="background-color: var(--color-surface)"],
+    div[style*="background-color: #f8f9fa"],
+    div[style*="background-color: #fffbeb"],
+    .bg-white {
+        background-color: transparent !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    /* 4. Use clean horizontal rules instead of box borders */
+    .result-card .border-bottom,
+    .border-top {
+        border-color: #ccc !important;
+    }
+    .tree-row {
+        border-bottom: none !important; /* Remove lines between tree items */
+    }
+
+    /* 5. Prevent specific sections from being cut in half across pages */
+    .tree-container, 
+    .distribution-row, 
+    .mb-3 {
+        page-break-inside: avoid !important;
+    }
+
+    /* 6. Formalize the badges for paper */
+    .badge-custom {
+        border: 1px solid #666 !important;
+        background-color: transparent !important;
+        color: #000 !important;
+    }
+
+    .tooltip-bubble {
+        display: none !important;
+    }
+}
+
+/* -----------------------------------------
+   Custom Accordion (Primary Prediction)
+   ----------------------------------------- */
+details.custom-accordion summary::-webkit-details-marker {
+    display: none; /* Hides default arrow in Chrome/Safari */
+}
+details.custom-accordion summary {
+    user-select: none;
+}
+details.custom-accordion[open] summary ~ * {
+    animation: sweep .2s ease-in-out;
+}
+@keyframes sweep {
+    0%    {opacity: 0; transform: translateY(-5px)}
+    100%  {opacity: 1; transform: translateY(0)}
+}
+

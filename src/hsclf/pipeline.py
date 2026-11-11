@@ -15,35 +15,43 @@ class HSPipeline:
     def __init__(self, scenario='main', cache_size=150):
         self.scenario = scenario
         
-        # 1. NEW: Load params.yaml configurations
-        with open('params.yaml', 'r') as f:
+        project_root = Path(__file__).resolve().parent.parent.parent
+        params_path = project_root / 'config' / 'params.yaml'
+        
+        with open(params_path, 'r') as f:
             self.params = yaml.safe_load(f)
             
         self.bands = self.params.get('confidence_bands', {
-            'level_8': {'high': 0.75, 'med': 0.50},
-            'level_2': {'high': 0.90, 'med': 0.60}
+            8: {'high': 0.75, 'med': 0.50},
+            6: {'high': 0.75, 'med': 0.50},
+            4: {'high': 0.90, 'med': 0.60},
+            2: {'high': 0.90, 'med': 0.60}
         })
         self.t_oos = self.params.get('t_oos', 0.3788)
         self.show_examples = self.params.get('track_e', {}).get('show_examples', True)
-        
-        # 2. Load Track F valid codes
+
         self.valid_codes = self._load_valid_codes()
-        
-        # 3. Load the C5 Engine
         self.engine = HSInferenceEngine(scenario=self.scenario, cache_size=cache_size)
         
-        # 4. Load the C2 Feature Extractor and set IDF weights
         self.extractor = FeatureExtractor()
-        idf_path = f'data/processed/idf_{scenario}.npy'
+        idf_path = project_root / f'data/processed/idf_{scenario}.npy'
         
-        if Path(idf_path).exists():
+
+        if idf_path.exists():
             idf_array = np.load(idf_path)   
             self.extractor.set_idf(idf_array)
         else:
             self.extractor = None
 
-        # 5. Initialize the Track E Engine
         self.retrieval_engine = RetrievalEngine()
+
+        self.messages = {
+            8: "Confident down to the tariff line (8-digit). Please still verify before declaring.",
+            6: "For Human Verification: Confident down to the subheading (6-digit). Please verify the tariff line.",
+            4: "For Human Verification: Confident down to the heading (4-digit). Please verify the rest.",
+            2: "For Human Verification: Confident down to the chapter (2-digit). Please verify the rest.",
+            None: "Needs human verification at every level."
+        }
 
     def _load_valid_codes(self):
         try:
@@ -65,65 +73,54 @@ class HSPipeline:
     def predict(self, raw_text: str):
         norm_text = self.normalize_text(raw_text)
         
-        # Fast filter for empty/1-letter strings
         if self.fast_length_check(norm_text):
-            return {"status": "out_of_scope", "reason": "Text too short"}
+            return {"status": "out_of_scope", "reason": "Text is too short"}
             
-        # 1. Extract features
         if self.extractor and self.extractor.idf_weights is not None:
             features = self.extractor.transform([norm_text])
         else:
             return {"status": "error", "reason": "Feature Extractor/IDF not loaded"}
             
-        # 2. Beam Search Prediction (using predict_beam_batch)
         beam_results = self.engine.predict_beam_batch(features, top_k=5)
-        
         item_beams = beam_results[0]
         top_result = item_beams[0]
-        
         predicted_code = top_result['code']
-        calibrated_prob = top_result['prob']
         
-        # 3. NEW: Statistical Out-of-Scope Filter (t_oos)
-        if calibrated_prob < self.t_oos:
+        # Calculate level confidences by summing beam probabilities
+        confidences = {}
+        for lvl in (8, 6, 4, 2):
+            prefix = predicted_code[:lvl]
+            # Assuming raw beam probabilities serve as the calibrated proxy based on previous logic
+            confidences[lvl] = sum(b['prob'] for b in item_beams if b['code'][:lvl] == prefix)
+
+        # 1. Scope check on Chapter (Level 2) confidence
+        if confidences[2] < self.t_oos:
             return {
                 "status": "out_of_scope", 
-                "reason": f"Confidence ({round(calibrated_prob, 3)}) is below the safety threshold ({round(self.t_oos, 3)}). Vague or non-customs text."
+                "reason": f"Chapter confidence ({round(confidences[2], 3)}) is below the safety threshold ({round(self.t_oos, 3)}). May be outside supported chapters, or too vague."
             }
             
         is_valid_track_f = predicted_code in self.valid_codes if self.valid_codes else True
         
-        # 4. NEW: Hierarchical Fallback & 3-Tier Routing
-        # Check Level 8 First
-        if calibrated_prob >= self.bands['level_8']['high']:
-            deepest_level = 8
-            routing = "NORMAL"
-            ui_message = "High Confidence - Auto Approve"
-        elif calibrated_prob >= self.bands['level_8']['med']:
-            deepest_level = 8
-            routing = "HUMAN_VERIFICATION"
-            ui_message = "Medium Confidence - Please Verify"
-        else:
-            # Fallback to Level 2 (Sum probabilities of beams sharing the same Chapter)
-            top_chapter = predicted_code[:2]
-            l2_prob = sum(b['prob'] for b in item_beams if b['code'][:2] == top_chapter)
-            
-            if l2_prob >= self.bands['level_2']['high']:
-                deepest_level = 2
-                routing = "NORMAL"
-                ui_message = f"High Confidence at Chapter {top_chapter} - Select remaining digits"
-            elif l2_prob >= self.bands['level_2']['med']:
-                deepest_level = 2
-                routing = "HUMAN_VERIFICATION"
-                ui_message = f"Medium Confidence at Chapter {top_chapter} - Please Verify"
+        deepest = None
+        bands_out = {}
+        
+        for lvl in (8, 6, 4, 2):
+            p = confidences[lvl]
+            if p >= self.bands[lvl]["high"]:
+                band = "High"
+            elif p >= self.bands[lvl]["med"]:
+                band = "Medium"
             else:
-                # Fails both L8 and L2 med limits, but is above t_oos
-                deepest_level = 2
-                routing = "MANUAL_REVIEW"
-                ui_message = "Low Confidence - Manual Review Required"
+                band = "Low"
+                
+            bands_out[lvl] = band
+            if deepest is None and band != "Low":
+                deepest = lvl
+                
+        verification_required = (deepest != 8)
+        ui_message = self.messages[deepest]
 
-        # 5. NEW: Run the Track E Retrieval using YAML rules
-        # Extract unique 2-digit chapters from the ML's top 5 predictions for search routing
         routed_chapters = list(set([int(beam['code'][:2]) for beam in item_beams]))
         
         retrieval_results = self.retrieval_engine.query(
@@ -131,17 +128,60 @@ class HSPipeline:
             routed_chapters=routed_chapters, 
             show_examples=self.show_examples
         )
+        
+        for key, value in list(retrieval_results.items()):
+            if isinstance(value, pd.DataFrame):
+                new_key = key.replace('_df', '_list') if key.endswith('_df') else key
+                retrieval_results[new_key] = value.to_dict(orient="records")
+                if new_key != key:
+                    del retrieval_results[key]
             
         return {
             "status": "success",
             "raw_text": raw_text,
             "normalized_text": norm_text,
             "predicted_code": predicted_code,
-            "calibrated_confidence": round(calibrated_prob, 4),
-            "deepest_confident_level": deepest_level,
-            "routing": routing,
+            "deepest_confident_level": deepest,
+            "verification_required": verification_required,
             "ui_flag": ui_message,
+            "bands_out": bands_out,
             "track_f_valid": is_valid_track_f,
             "alternatives": item_beams[1:],
             "retrieval": retrieval_results
         }
+    
+if __name__ == "__main__":
+    import json
+    
+    print("Loading HSPipeline (this may take a few seconds to load the models)...")
+    pipeline = HSPipeline(scenario='main')
+    
+    # Let's test 4 different types of inputs to trigger your different routing rules
+
+    test_cases = [
+        # In-Scope (Should Pass)
+        "apple macbook pro laptop computer",  
+        "steel pipes",                        
+        "machine parts", 
+        "PART OF 1 CASE  - YAMAHA - CAP, CLEANER CASE 1 - 10 PCS",
+        "2PCE OIL PUMP ASSY",
+        
+        # Pure Garbage (Should Fail)
+        "asdfghjkl",                          
+        "as per invoice",
+        
+        # True Out-of-Scope (Should Fail - Not in Chapters 39, 73, 84, 85, 87)
+        "fresh mangoes",
+        "men's cotton t-shirts",
+        "wooden dining chair"
+    ]
+    
+    for text in test_cases:
+        print(f"\n" + "="*50)
+        print(f"USER INPUT: '{text}'")
+        print("="*50)
+        
+        result = pipeline.predict(text)
+        
+        # Print the dictionary in a clean, readable JSON format
+        print(json.dumps(result, indent=2))

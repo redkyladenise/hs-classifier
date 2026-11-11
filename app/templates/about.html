@@ -1,0 +1,206 @@
+{% extends "base.html" %}
+
+{% block title %}About | HS Classifier{% endblock %}
+
+{% block content %}
+<!-- VIEW 1: HERO & FEATURES -->
+<section class="hero-section text-center py-5">
+    <div class="container">
+        
+        <h1 class="fw-bold mb-3" style="color: var(--color-primary);">About the HS Classifier</h1>
+        
+        <p class="lead text-muted mx-auto mb-5" style="max-width: 750px; font-size: 1.15rem; line-height: 1.6;">
+             This system helps customs brokers and small importers find the right HS code for their products using Philippine import data, up to the 8-digit level. HS/AHTN is crucial for trade compliance. This serves as an assistive tool, <strong>not an official classification</strong>.
+        </p>
+
+        <div class="row g-4 justify-content-center">
+            <!-- Card 1: Smart Suggestions -->
+            <div class="col-md-5">
+                <div class="card h-100 shadow-sm p-4 feature-card">
+                    <div class="card-body d-flex flex-column align-items-center">
+                        <div class="mb-4 d-flex justify-content-center align-items-center rounded-circle" style="width: 80px; height: 80px; background-color: #ffffff; color: var(--color-primary); box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid var(--color-border);">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" height="40px" width="40px" fill="currentColor"><path d="M16.25,30q-1.15,0-1.96-0.82t-0.82-1.96V24.67q-2.44-1.65-3.79-4.24T8.33,14.92q0-4.84 3.41-8.21t8.27-3.37t8.26,3.4T31.67,15q0,2.93-1.35,5.48t-3.78,4.19v2.56q0,1.15-0.82,1.96T23.75,30h-7.5Zm0.14-2.78h7.22V23.33l1.47-1.03q1.81-1.25 2.81-3.19t1-4.12q0-3.7-2.59-6.29T20,6.11T13.7,8.72t-2.59,6.31q0,2.18 1,4.11t2.81,3.17l1.47,1.02v3.9Zm0.19,9.44q-0.59,0-0.99-0.4t-0.4-0.99V33.89h9.64v1.39q0,0.59-0.4,0.99t-0.99,0.4H16.58ZM20,15Z"/></svg>
+                        </div>
+                        <h2 class="h4 fw-bold mb-3" style="color: var(--color-primary);">Smart Suggestions</h2>
+                        <p class="text-muted mb-0" style="font-size: 1rem; line-height: 1.6;">
+                            Suggests the best matching codes from 2-digit (Chapter), 4-digit (Heading), 6-digit (Subheading), to 8-digit (AHTN) based on your product description.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 2: Confidence & Evidence -->
+            <div class="col-md-5">
+                <div class="card h-100 shadow-sm p-4 feature-card">
+                    <div class="card-body d-flex flex-column align-items-center">
+                        <div class="mb-4 d-flex justify-content-center align-items-center rounded-circle" style="width: 80px; height: 80px; background-color: #ffffff; color: var(--color-primary); box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid var(--color-border);">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" class="bi bi-shield-check" viewBox="0 0 16 16"><path d="M5.338 1.59a61.44 61.44 0 0 0-2.837.856.481.481 0 0 0-.328.39c-.554 4.157.726 7.19 2.253 9.188a10.725 10.725 0 0 0 2.287 2.233c.346.244.652.42.893.533.12.057.218.095.293.118a.55.55 0 0 0 .101.025.615.615 0 0 0 .1-.025c.076-.023.174-.061.294-.118.24-.113.547-.29.893-.533a10.726 10.726 0 0 0 2.287-2.233c1.527-1.997 2.807-5.031 2.253-9.188a.48.48 0 0 0-.328-.39c-.651-.213-1.75-.56-2.837-.855C9.552 1.29 8.531 1.067 8 1.067c-.53 0-1.552.223-2.662.524zM5.072.56C6.157.265 7.31 0 8 0c.69 0 1.843.265 2.928.56 1.085.295 2.163.632 2.828.855.45.15.781.576.84 1.13.61 4.585-.83 7.96-2.498 10.148a11.744 11.744 0 0 1-2.51 2.45c-.38.268-.724.47-1.005.601-.136.064-.25.111-.336.144a1.593 1.593 0 0 1-.42.112 1.63 1.63 0 0 1-.42-.112 5.077 5.077 0 0 1-.336-.144c-.28-.131-.625-.333-1.005-.601a11.74 11.74 0 0 1-2.51-2.45C1.756 8.52.315 5.144.925.56c.06-.554.39-.98.84-1.13.665-.223 1.743-.56 2.828-.855z"/><path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/></svg>
+                        </div>
+                        <h2 class="h4 fw-bold mb-3" style="color: var(--color-primary);">Confidence & Retrieval</h2>
+                        <p class="text-muted mb-0" style="font-size: 1rem; line-height: 1.6;">
+                            Shows how sure the model is at every level with calibrated confidence, and retrieves similar past declarations to help you decide.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- VIEW 2: THE MODEL (Full-width Dark) -->
+<section class="about-dark">
+    <div class="container">
+        <div class="row align-items-center g-4">
+            
+            <!-- Left Side: Why a Hierarchy -->
+            <div class="col-lg-6">
+                <h2>Why a Hierarchy of Small Models?</h2>
+                
+                <p>
+                    Customs descriptions are messy. Brokers often use vague terms, incomplete descriptions, or brand names, making exact HS code prediction difficult.
+                </p>
+                
+                <p class="mb-0">
+                    A hierarchical model breaks this problem into smaller steps using logistic regression. Instead of predicting an 8-digit code in one leap, it progressively narrows down the possibilities while keeping the top 5 most promising paths at each level.
+                </p>
+            </div>
+
+            <!-- Right Side: How it works -->
+            <div class="col-lg-6">
+                <div class="how-it-works-card">
+                    <h4 class="d-flex align-items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" height="20px" width="20px" fill="#ffffff"><path d="M9.25,14h1.5V9H9.25v5Zm1.28-6.71q0.22-0.21 0.22-0.53T10.54,6.22T10,6T9.47,6.21T9.25,6.75T9.46,7.28T10,7.5t0.54-0.21ZM10.01,18Q8.35,18 6.9,17.38T4.34,15.66T2.63,13.11T2,9.99T2.63,6.89T4.34,4.34T6.89,2.63T10.01,2t3.11,0.63t2.54,1.72t1.72,2.55T18,9.99T17.38,13.1t-1.72,2.55t-2.55,1.72T10.01,18ZM10,16.5q2.71,0 4.6-1.9T16.5,10T14.6,5.4T10,3.5T5.4,5.4T3.5,10t1.9,4.6T10,16.5ZM10,10Z"/></svg>
+                        How it works
+                    </h4>
+                    
+                    <ul class="process-list">
+                        <li class="d-flex">
+                            <span class="me-2 fw-bold">1.</span>
+                            <span>Clean and normalize the product description.</span>
+                        </li>
+                        <li class="d-flex">
+                            <span class="me-2 fw-bold">2.</span>
+                            <span>Predict HS codes from 2 to 8 digits.</span>
+                        </li>
+                        <li class="d-flex">
+                            <span class="me-2 fw-bold">3.</span>
+                            <span>Provide confidence scores for predictions.</span>
+                        </li>
+                        <li class="d-flex border-bottom-0 pb-0">
+                            <span class="me-2 fw-bold">4.</span>
+                            <span>Retrieve similar past declarations as references.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- VIEW 3: COVERED CHAPTERS & SCOPE -->
+<section class="scope-chapter">
+    <div class="container">
+        <h2 class="d-flex align-items-center justify-content-center gap-2 mb-3">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="34px" width="34px" fill="var(--color-primary)"><path d="M11,19.43V12.58L5,9.1v6.85l6,3.48Zm2,0l6-3.48V9.1l-6,3.47v6.85Zm-2,2.3L4,17.7q-0.47-0.27-0.74-0.72Q3,16.52 3,15.98V8.02q0-0.55 0.26-1T4,6.3l7-4.03Q11.48,2 12,2q0.53,0 1,0.27L20,6.3q0.48,0.27 0.74,0.72t0.26,1v7.95q0,0.55-0.26,1T20,17.7l-7,4.03Q12.53,22 12,22t-1-0.27Zm5-13.2l1.93-1.1L12,4L10.05,5.13L16,8.52Zm-4,2.33l1.95-1.13L8.03,6.3L6.08,7.43L12,10.85Z"/></svg>
+            <span>Covered HS Chapters</span>
+        </h2>
+
+        <p class="scope-chapter-intro">
+            This tool focuses on five selected Harmonized System chapters based on historical Philippine customs declaration records: Chapters 39 (Plastics), 73 (Iron and Steel), 84 (Machinery), 85 (Electrical Equipment), and 87 (Vehicles and Parts).
+        </p>
+
+        <div id="section-3-list">
+            <div class="scope-chapter-item">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="20px" width="20px" fill="var(--color-primary)"><path d="M11,19.43V12.58L5,9.1v6.85l6,3.48Zm2,0l6-3.48V9.1l-6,3.47v6.85Zm-2,2.3L4,17.7q-0.47-0.27-0.74-0.72Q3,16.52 3,15.98V8.02q0-0.55 0.26-1T4,6.3l7-4.03Q11.48,2 12,2q0.53,0 1,0.27L20,6.3q0.48,0.27 0.74,0.72t0.26,1v7.95q0,0.55-0.26,1T20,17.7l-7,4.03Q12.53,22 12,22t-1-0.27Zm5-13.2l1.93-1.1L12,4L10.05,5.13L16,8.52Zm-4,2.33l1.95-1.13L8.03,6.3L6.08,7.43L12,10.85Z"/></svg>
+                <span><strong>Chapter 39:</strong> Plastics and articles thereof</span>
+            </div>
+
+            <div class="scope-chapter-item">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="20px" width="20px" fill="var(--color-primary)"><path d="M11,19.43V12.58L5,9.1v6.85l6,3.48Zm2,0l6-3.48V9.1l-6,3.47v6.85Zm-2,2.3L4,17.7q-0.47-0.27-0.74-0.72Q3,16.52 3,15.98V8.02q0-0.55 0.26-1T4,6.3l7-4.03Q11.48,2 12,2q0.53,0 1,0.27L20,6.3q0.48,0.27 0.74,0.72t0.26,1v7.95q0,0.55-0.26,1T20,17.7l-7,4.03Q12.53,22 12,22t-1-0.27Zm5-13.2l1.93-1.1L12,4L10.05,5.13L16,8.52Zm-4,2.33l1.95-1.13L8.03,6.3L6.08,7.43L12,10.85Z"/></svg>
+                <span><strong>Chapter 73:</strong> 	Articles of iron or steel</span>
+            </div>
+
+            <div class="scope-chapter-item">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="20px" width="20px" fill="var(--color-primary)"><path d="M11,19.43V12.58L5,9.1v6.85l6,3.48Zm2,0l6-3.48V9.1l-6,3.47v6.85Zm-2,2.3L4,17.7q-0.47-0.27-0.74-0.72Q3,16.52 3,15.98V8.02q0-0.55 0.26-1T4,6.3l7-4.03Q11.48,2 12,2q0.53,0 1,0.27L20,6.3q0.48,0.27 0.74,0.72t0.26,1v7.95q0,0.55-0.26,1T20,17.7l-7,4.03Q12.53,22 12,22t-1-0.27Zm5-13.2l1.93-1.1L12,4L10.05,5.13L16,8.52Zm-4,2.33l1.95-1.13L8.03,6.3L6.08,7.43L12,10.85Z"/></svg>
+                <span><strong>Chapter 84:</strong> Nuclear reactors, boilers, machinery and mechanical appliances; parts thereof</span>
+            </div>
+
+            <div class="scope-chapter-item">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="20px" width="20px" fill="var(--color-primary)"><path d="M11,19.43V12.58L5,9.1v6.85l6,3.48Zm2,0l6-3.48V9.1l-6,3.47v6.85Zm-2,2.3L4,17.7q-0.47-0.27-0.74-0.72Q3,16.52 3,15.98V8.02q0-0.55 0.26-1T4,6.3l7-4.03Q11.48,2 12,2q0.53,0 1,0.27L20,6.3q0.48,0.27 0.74,0.72t0.26,1v7.95q0,0.55-0.26,1T20,17.7l-7,4.03Q12.53,22 12,22t-1-0.27Zm5-13.2l1.93-1.1L12,4L10.05,5.13L16,8.52Zm-4,2.33l1.95-1.13L8.03,6.3L6.08,7.43L12,10.85Z"/></svg>
+                <span><strong>Chapter 85:</strong> Electrical machinery and equipment and parts thereof; sound recorders and reproducers;<br>
+                television image and sound recorders and reproducers, and parts and accessories of such articles</span>
+            </div>
+
+            <div class="scope-chapter-item">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="20px" width="20px" fill="var(--color-primary)"><path d="M11,19.43V12.58L5,9.1v6.85l6,3.48Zm2,0l6-3.48V9.1l-6,3.47v6.85Zm-2,2.3L4,17.7q-0.47-0.27-0.74-0.72Q3,16.52 3,15.98V8.02q0-0.55 0.26-1T4,6.3l7-4.03Q11.48,2 12,2q0.53,0 1,0.27L20,6.3q0.48,0.27 0.74,0.72t0.26,1v7.95q0,0.55-0.26,1T20,17.7l-7,4.03Q12.53,22 12,22t-1-0.27Zm5-13.2l1.93-1.1L12,4L10.05,5.13L16,8.52Zm-4,2.33l1.95-1.13L8.03,6.3L6.08,7.43L12,10.85Z"/></svg>
+                <span><strong>Chapter 87:</strong> Vehicles other than railway or tramway rollingstock, and parts and accessories thereof</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- VIEW 4: DATA & DISCLAIMER -->
+<section class="disclaimer-section">
+    <div class="container">
+        <h2 class="d-flex align-items-center justify-content-center gap-2 mb-3">
+            <svg xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960" width="40px" fill="#ffffff"><path d="M480-80.67q-139.67-35-229.83-161.5Q160-368.67 160-520.67v-240l320-120 320 120v240q0 152-90.17 278.5Q619.67-115.67 480-80.67Zm0-69.33q111.33-36.33 182.33-139.67 71-103.33 71-231v-193.66L480-809.67l-253.33 95.34v193.66q0 127.67 71 231Q368.67-186.33 480-150Zm0-330Z"/></svg>
+            <span>Data & Disclaimer</span>
+        </h2>
+
+        <p>
+            This system provides classification guidance using public historical Philippine import data. Please note the following:
+        </p>
+
+        <div class="disclaimer-list mx-auto" style="max-width: 1000px;">
+            <div class="disclaimer-item justify-content-center text-center">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="20px" width="20px" fill="#ffffff">
+                    <path d="M10.59,21.41Q10,20.83 10,20h4q0,0.82-0.59,1.41T12,22t-1.41-0.59ZM8,19V17h8v2H8Zm0.25-3q-1.72-1.03-2.74-2.75Q4.5,11.52 4.5,9.5q0-3.13 2.19-5.31T12,2t5.31,2.19T19.5,9.5q0,2.02-1.01,3.75T15.75,16H8.25Zm0.6-2h6.3q1.13-0.8 1.74-1.98T17.5,9.5q0-2.3-1.6-3.9T12,4T8.1,5.6T6.5,9.5q0,1.35 0.61,2.52T8.85,14ZM12,14Z"/>
+                </svg>
+                <span>Trained on public historical Philippine import data and AHTN schedules, covering five selected chapters.</span>
+            </div>
+
+            <div class="disclaimer-item justify-content-center text-center">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="20px" width="20px" fill="#ffffff">
+                    <path d="M10.59,21.41Q10,20.83 10,20h4q0,0.82-0.59,1.41T12,22t-1.41-0.59ZM8,19V17h8v2H8Zm0.25-3q-1.72-1.03-2.74-2.75Q4.5,11.52 4.5,9.5q0-3.13 2.19-5.31T12,2t5.31,2.19T19.5,9.5q0,2.02-1.01,3.75T15.75,16H8.25Zm0.6-2h6.3q1.13-0.8 1.74-1.98T17.5,9.5q0-2.3-1.6-3.9T12,4T8.1,5.6T6.5,9.5q0,1.35 0.61,2.52T8.85,14ZM12,14Z"/>
+                </svg>
+                <span>Aligned with the AHTN 2022 nomenclature implemented in the Philippines.</span>
+            </div>
+
+            <div class="disclaimer-item justify-content-center text-center">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="20px" width="20px" fill="#ffffff">
+                    <path d="M10.59,21.41Q10,20.83 10,20h4q0,0.82-0.59,1.41T12,22t-1.41-0.59ZM8,19V17h8v2H8Zm0.25-3q-1.72-1.03-2.74-2.75Q4.5,11.52 4.5,9.5q0-3.13 2.19-5.31T12,2t5.31,2.19T19.5,9.5q0,2.02-1.01,3.75T15.75,16H8.25Zm0.6-2h6.3q1.13-0.8 1.74-1.98T17.5,9.5q0-2.3-1.6-3.9T12,4T8.1,5.6T6.5,9.5q0,1.35 0.61,2.52T8.85,14ZM12,14Z"/>
+                </svg>
+                <span>User descriptions are not stored, and retrieved historical descriptions are anonymized.</span>
+            </div>
+
+            <div class="disclaimer-item justify-content-center text-center">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="20px" width="20px" fill="#ffffff">
+                    <path d="M10.59,21.41Q10,20.83 10,20h4q0,0.82-0.59,1.41T12,22t-1.41-0.59ZM8,19V17h8v2H8Zm0.25-3q-1.72-1.03-2.74-2.75Q4.5,11.52 4.5,9.5q0-3.13 2.19-5.31T12,2t5.31,2.19T19.5,9.5q0,2.02-1.01,3.75T15.75,16H8.25Zm0.6-2h6.3q1.13-0.8 1.74-1.98T17.5,9.5q0-2.3-1.6-3.9T12,4T8.1,5.6T6.5,9.5q0,1.35 0.61,2.52T8.85,14ZM12,14Z"/>
+                </svg>
+                <span>Generic descriptions (e.g., "Parts" or "Accessories") may produce low-confidence predictions.</span>
+            </div>
+
+            <div class="disclaimer-item justify-content-center text-center">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="20px" width="20px" fill="#ffffff">
+                    <path d="M10.59,21.41Q10,20.83 10,20h4q0,0.82-0.59,1.41T12,22t-1.41-0.59ZM8,19V17h8v2H8Zm0.25-3q-1.72-1.03-2.74-2.75Q4.5,11.52 4.5,9.5q0-3.13 2.19-5.31T12,2t5.31,2.19T19.5,9.5q0,2.02-1.01,3.75T15.75,16H8.25Zm0.6-2h6.3q1.13-0.8 1.74-1.98T17.5,9.5q0-2.3-1.6-3.9T12,4T8.1,5.6T6.5,9.5q0,1.35 0.61,2.52T8.85,14ZM12,14Z"/>
+                </svg>
+                <span>Confidence scores indicate model certainty, not guaranteed accuracy or legal correctness.</span>
+            </div>
+
+            <div class="disclaimer-item justify-content-center text-center">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="20px" width="20px" fill="#ffffff">
+                    <path d="M10.59,21.41Q10,20.83 10,20h4q0,0.82-0.59,1.41T12,22t-1.41-0.59ZM8,19V17h8v2H8Zm0.25-3q-1.72-1.03-2.74-2.75Q4.5,11.52 4.5,9.5q0-3.13 2.19-5.31T12,2t5.31,2.19T19.5,9.5q0,2.02-1.01,3.75T15.75,16H8.25Zm0.6-2h6.3q1.13-0.8 1.74-1.98T17.5,9.5q0-2.3-1.6-3.9T12,4T8.1,5.6T6.5,9.5q0,1.35 0.61,2.52T8.85,14ZM12,14Z"/>
+                </svg>
+                <span>
+                    For official classifications, consult the
+                    <a href="https://finder.tariffcommission.gov.ph/" target="_blank" rel="noopener noreferrer">Philippine Tariff Finder</a> or
+                    the <a href="https://newtc.tariffcommission.gov.ph/" target="_blank" rel="noopener noreferrer">AHTN 2022 Tariff Book</a>.
+                </span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/about.css') }}" />
+{% endblock %}

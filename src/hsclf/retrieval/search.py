@@ -43,13 +43,17 @@ class RetrievalEngine:
                 self.matrix_cache[chapter] = None
                 
         return self.matrix_cache[chapter]
-    def query(self, raw_text, routed_chapters, top_k=5, min_similarity=0.5, split_share=0.60, show_examples=True):
+    
+    def query(self, raw_text, routed_chapters, top_k=5, min_similarity=0.5, split_share=0.60, show_examples=True, vague_max_words=2, vague_low_share_max=0.40):
         # 1. Normalize and Extract Math Features
         norm_result = normalize_light(raw_text)
         normalized_text = norm_result['desc_norm']
+
+        is_short_text = len(normalized_text.split()) <= vague_max_words
+
         query_vector = self.extractor.transform([normalized_text])
         
-        all_top_indices, all_top_sims, all_top_chapters = [], [], []
+        all_top_indices, all_top_desc_ids, all_top_sims, all_top_chapters = [], [], [], []
         
         # 2. Search only the routed chapters (Fast NumPy Math)
         for ch in routed_chapters:
@@ -65,14 +69,20 @@ class RetrievalEngine:
             idx = np.argpartition(similarities, -k)[-k:]
             idx = idx[np.argsort(similarities[idx])[::-1]]
             
+            # FIX 1: Robust lookup (handles int 39, string '39', and string '039'/'01')
             ch_meta = self.meta_cache.get(ch)
+            if ch_meta is None: ch_meta = self.meta_cache.get(str(ch))
+            if ch_meta is None: ch_meta = self.meta_cache.get(str(ch).zfill(2))
+                
             if ch_meta is None or ch_meta.empty:
                 continue
                 
             group_l1s = ch_meta['group_l1'].values[idx]
+            desc_norm_ids = ch_meta['desc_norm_id'].values[idx] # Fetched for texts!
             sims = similarities[idx]
             
             all_top_indices.extend(group_l1s)
+            all_top_desc_ids.extend(desc_norm_ids)
             all_top_sims.extend(sims)
             all_top_chapters.extend([ch] * len(group_l1s))
             
@@ -82,6 +92,7 @@ class RetrievalEngine:
         # 3. Combine and pick the absolute top_k across the searched chapters
         combo_df = pd.DataFrame({
             'group_l1': all_top_indices,
+            'desc_norm_id': all_top_desc_ids, # Added to dataframe
             'similarity': all_top_sims,
             'chapter': all_top_chapters
         })
@@ -95,11 +106,12 @@ class RetrievalEngine:
         if show_examples and not final_results.empty:
             max_sim = final_results['similarity'].max()
             if max_sim >= min_similarity:
-                # Optimized reindex mapping instead of merge
                 final_with_text = final_results.copy()
+                
+                # FIX 2: Look up text using desc_norm_id instead of group_l1
                 final_with_text['desc_norm'] = (
                     self.texts_df['desc_norm']
-                    .reindex(final_with_text['group_l1'].values)
+                    .reindex(final_with_text['desc_norm_id'].values)
                     .values
                 )
                 final_with_text = (
@@ -130,11 +142,18 @@ class RetrievalEngine:
                     })
 
         # 6. Build Distribution and Flags based on File 6 rules
-        result_dict = self._build_distribution(final_results, min_similarity, split_share)
+        result_dict = self._build_distribution(final_results, min_similarity, split_share, vague_low_share_max)
+
+        result_dict['is_vague'] = bool(
+            is_short_text or 
+            result_dict.get('is_vague_distribution', False) or 
+            result_dict.get('no_close_match', False)
+        )
+        
         result_dict['examples'] = examples
         return result_dict
-    
-    def _build_distribution(self, df, min_sim, split_share):
+
+    def _build_distribution(self, df, min_sim, split_share, vague_low_share_max=0.40):
         if df.empty:
             return self._empty_result()
             
@@ -147,9 +166,15 @@ class RetrievalEngine:
         
         if valid_codes.empty:
              return {
-                 "neighbors_df": df, "distribution": pd.DataFrame(), "invalid_dropped": invalid_dropped, 
-                 "total_declarations": 0, "total_descriptions": total_desc,
-                 "max_similarity": max_similarity, "no_close_match": no_close_match, "split_notice": False
+                 "neighbors_df": df, 
+                 "distribution": pd.DataFrame(), 
+                 "invalid_dropped": invalid_dropped, 
+                 "total_declarations": 0, 
+                 "total_descriptions": total_desc,
+                 "max_similarity": max_similarity, 
+                 "no_close_match": no_close_match, 
+                 "split_notice": False, 
+                 "is_vague_distribution": True
              }
             
         dist = valid_codes.groupby('code')['declaration_count'].sum().reset_index()
@@ -159,6 +184,8 @@ class RetrievalEngine:
         dist['share'] = dist['declaration_count'] / total_tx
         
         split_notice = bool(dist.iloc[0]['share'] < split_share)
+
+        is_vague_distribution = bool(dist.iloc[0]['share'] <= vague_low_share_max)
 
         # Top 3 + Other logic
         if len(dist) > 3:
@@ -178,7 +205,8 @@ class RetrievalEngine:
             "total_descriptions": total_desc,
             "max_similarity": max_similarity,
             "no_close_match": no_close_match,
-            "split_notice": split_notice
+            "split_notice": split_notice,
+            "is_vague_distribution": is_vague_distribution
         }
 
     def _empty_result(self):
