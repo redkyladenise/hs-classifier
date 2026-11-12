@@ -91,6 +91,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const startBatch = async (descriptions) => {
         isCancelled = false;
+        
+        // Reset the button state
+        cancelBtn.textContent = "Cancel Process";
+        cancelBtn.disabled = false;
+        
         batchData = [];
         resultsArea.classList.add("d-none");
         progressArea.classList.remove("d-none");
@@ -140,7 +145,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         // Handle cancellation
-        if (isCancelled) {
+        if (isCancelled && processed < total) {
             for (let i = processed; i < total; i++) {
                 batchData.push({ row: i + 1, text: descriptions[i], status: "not_processed", data: null });
             }
@@ -152,6 +157,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     cancelBtn.addEventListener("click", () => {
         isCancelled = true;
+        cancelBtn.textContent = "Cancelling...";
+        cancelBtn.disabled = true;
     });
 
     const renderBatchResults = () => {
@@ -160,7 +167,14 @@ document.addEventListener("DOMContentLoaded", () => {
         const total = batchData.length;
         const inScopeData = batchData.filter(d => d.data && d.data.status === "success");
         const inScope = inScopeData.length;
-        const errors = batchData.filter(d => d.status === "error" || d.status === "empty" || d.status === "too_long").length;
+        // const errors = batchData.filter(d => d.status === "error" || d.status === "empty" || d.status === "too_long").length;
+        const fails = batchData.filter(d => 
+            d.status === "error" || 
+            d.status === "empty" || 
+            d.status === "too_long" || 
+            (d.data && d.data.status === "out_of_scope")
+        ).length;
+
         const needVerify = inScopeData.filter(d => d.data.verification_required).length;
         const flaggedVague = inScopeData.filter(d => d.data.retrieval && d.data.retrieval.is_vague).length;
 
@@ -177,7 +191,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // Calculate health bar percentages (based on total rows)
         const pctOk = total === 0 ? 0 : Math.round(((inScope - needVerify) / total) * 100);
         const pctVerify = total === 0 ? 0 : Math.round((needVerify / total) * 100);
-        const pctErr = total === 0 ? 0 : Math.round((errors / total) * 100);
+        const pctFail = total === 0 ? 0 : Math.round((fails / total) * 100);
 
         // 1. Render Clean SaaS-Style KPI Summary
         summaryStats.innerHTML = `
@@ -198,16 +212,16 @@ document.addEventListener("DOMContentLoaded", () => {
                     <div class="text-muted fw-bold text-uppercase mb-1" style="font-size: 0.7rem; letter-spacing: 1px;">Vague</div>
                     <div class="fs-3" style="color: #d97706;">${flaggedVague}</div>
                 </div>
-                <div class="col">
-                    <div class="text-muted fw-bold text-uppercase mb-1" style="font-size: 0.7rem; letter-spacing: 1px;">Errors</div>
-                    <div class="fs-3" style="color: #963F3F;">${errors}</div>
+                <div class="col-6 col-md">
+                    <div class="text-muted fw-bold text-uppercase mb-1" style="font-size: 0.7rem; letter-spacing: 1px;">Fail</div>
+                    <div style="font-size: 2.5rem; font-weight: 300; line-height: 1; color: #963F3F;">${fails}</div>
                 </div>
             </div>
 
             <div class="w-100 d-flex rounded-pill overflow-hidden mb-2" style="height: 6px; background-color: #e2e8f0;">
                 <div style="width: ${pctOk}%; background-color: var(--color-primary); transition: width 1s ease;"></div>
                 <div style="width: ${pctVerify}%; background-color: #D4AF37; transition: width 1s ease;"></div>
-                <div style="width: ${pctErr}%; background-color: #963F3F; transition: width 1s ease;"></div>
+                <div style="width: ${pctFail}%; background-color: #963F3F; transition: width 1s ease;"></div>
             </div>
 
             <!-- Diagnostics String (Shifted to Left) -->
@@ -325,9 +339,9 @@ document.addEventListener("DOMContentLoaded", () => {
             "chapter_code", "chapter_confidence",
             "heading_code", "heading_confidence",
             "subheading_code", "subheading_confidence",
-            "line_code", "line_confidence",
+            "ahtn_subheading_code", "ahtn_subheading_confidence",
             "deepest_confident_level", "verification_required",
-            "line_candidates", "vagueness_flag",
+            "ahtn_candidates", "vagueness_flag",
             "retrieval_top_code_L4", "retrieval_split_notice",
             "model_version", "run_date"
         ];

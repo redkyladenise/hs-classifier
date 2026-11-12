@@ -118,7 +118,7 @@
                                     <th class="py-3">Chapter</th>
                                     <th class="py-3">Heading</th>
                                     <th class="py-3">Subheading</th>
-                                    <th class="py-3">Tariff Line</th>
+                                    <th class="py-3">AHTN Subheading</th>
                                     <th class="py-3">Verify</th>
                                     <th class="py-3 pe-2">Details</th>
                                 </tr>
@@ -181,7 +181,7 @@
                             <li><strong>chapter:</strong> Predicted 2-digit HS chapter code and its confidence score.</li>
                             <li><strong>heading:</strong> Predicted 4-digit HS heading code and its confidence score.</li>
                             <li><strong>subheading:</strong> Predicted 6-digit HS subheading code and its confidence score.</li>
-                            <li><strong>line:</strong> Predicted 8-digit AHTN tariff line code and its confidence score.</li>
+                            <li><strong>AHTN subheading</strong> Predicted 8-digit AHTN subheading code and its confidence score.</li>
                             <li><strong>deepest_confident_level:</strong> Deepest hierarchical level at which the model meets the required confidence threshold.</li>
                         </ul>
 
@@ -191,7 +191,7 @@
                         </h6>
                         <ul class="mb-4">
                             <li><strong>verification_required:</strong> Indicates whether the classification requires human review.</li>
-                            <li><strong>line_candidates:</strong> Alternative tariff line codes identified by the model.</li>
+                            <li><strong>ahtn_candidates:</strong> Alternative AHTN subheading codes identified by the model.</li>
                         </ul>
 
                         <!-- 4. Retrieval Diagnostics -->

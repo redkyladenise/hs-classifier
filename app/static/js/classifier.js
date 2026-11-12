@@ -297,9 +297,9 @@ document.addEventListener("DOMContentLoaded", () => {
                                 
                                 <div class="text-muted opacity-25 d-none d-md-block">━━━━</div>
                                 
-                                <!-- Tariff Line -->
+                                <!-- AHTN Subheading -->
                                 <div class="px-2 px-md-3">
-                                    <div class="text-muted small fw-bold" style="font-size:0.65rem; letter-spacing:1px;">TARIFF LINE</div>
+                                    <div class="text-muted small fw-bold" style="font-size:0.65rem; letter-spacing:1px;">AHTN SUBHEADING</div>
                                     <div class="fw-bold text-dark fs-5 my-1">${formatCode(code, 8)}</div>
                                     ${getBadge(bands["8"], 8)}
                                 </div>

@@ -46,8 +46,8 @@ class HSPipeline:
         self.retrieval_engine = RetrievalEngine()
 
         self.messages = {
-            8: "Confident down to the tariff line (8-digit). Please still verify before declaring.",
-            6: "For Human Verification: Confident down to the subheading (6-digit). Please verify the tariff line.",
+            8: "Confident down to the AHTN subheading (8-digit). Please still verify before declaring.",
+            6: "For Human Verification: Confident down to the subheading (6-digit). Please verify the AHTN subheading.",
             4: "For Human Verification: Confident down to the heading (4-digit). Please verify the rest.",
             2: "For Human Verification: Confident down to the chapter (2-digit). Please verify the rest.",
             None: "Needs human verification at every level."
@@ -105,19 +105,40 @@ class HSPipeline:
         deepest = None
         bands_out = {}
         
-        for lvl in (8, 6, 4, 2):
+        # Track the previous (higher) level's band to enforce the hierarchy rule
+        prev_band_rank = 3 # 3 = High, 2 = Medium, 1 = Low
+        
+        for lvl in (2, 4, 6, 8):
             p = confidences[lvl]
+            
+            # 1. Get the raw band based on the threshold
             if p >= self.bands[lvl]["high"]:
-                band = "High"
+                raw_band = "High"
+                raw_rank = 3
             elif p >= self.bands[lvl]["med"]:
-                band = "Medium"
+                raw_band = "Medium"
+                raw_rank = 2
             else:
-                band = "Low"
+                raw_band = "Low"
+                raw_rank = 1
                 
-            bands_out[lvl] = band
-            if deepest is None and band != "Low":
+            # 2. Apply the Monotonic Rule: A child cannot be better than its parent
+            final_rank = min(raw_rank, prev_band_rank)
+            
+            # 3. Map the rank back to the string band
+            if final_rank == 3:
+                final_band = "High"
+            elif final_rank == 2:
+                final_band = "Medium"
+            else:
+                final_band = "Low"
+                
+            bands_out[lvl] = final_band
+            prev_band_rank = final_rank 
+            
+            if final_band != "Low":
                 deepest = lvl
-                
+
         verification_required = (deepest != 8)
         ui_message = self.messages[deepest]
 
@@ -160,20 +181,22 @@ if __name__ == "__main__":
 
     test_cases = [
         # In-Scope (Should Pass)
-        "apple macbook pro laptop computer",  
-        "steel pipes",                        
-        "machine parts", 
-        "PART OF 1 CASE  - YAMAHA - CAP, CLEANER CASE 1 - 10 PCS",
-        "2PCE OIL PUMP ASSY",
+        # "apple macbook pro laptop computer",  
+        # "steel pipes",                        
+        # "machine parts", 
+        # "PART OF 1 CASE  - YAMAHA - CAP, CLEANER CASE 1 - 10 PCS",
+        # "2PCE OIL PUMP ASSY",
+        "inline fuel filter",
+        "stainless steel kitchen sink"
         
-        # Pure Garbage (Should Fail)
-        "asdfghjkl",                          
-        "as per invoice",
+        # # Pure Garbage (Should Fail)
+        # "asdfghjkl",                          
+        # "as per invoice",
         
-        # True Out-of-Scope (Should Fail - Not in Chapters 39, 73, 84, 85, 87)
-        "fresh mangoes",
-        "men's cotton t-shirts",
-        "wooden dining chair"
+        # # True Out-of-Scope (Should Fail - Not in Chapters 39, 73, 84, 85, 87)
+        # "fresh mangoes",
+        # "men's cotton t-shirts",
+        # "wooden dining chair"
     ]
     
     for text in test_cases:

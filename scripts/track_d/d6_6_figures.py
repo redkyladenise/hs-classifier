@@ -15,11 +15,11 @@ def plot_test_accuracy(df, out_dir):
     h3_rate = overall[overall['model'] == 'main_h3']['rate'].values[0] * 100
 
     fig, ax = plt.subplots(figsize=(8, 6))
-    bars = ax.bar(['Raw Historical Data\n(Baseline)', 'Modified Data\n(Down-weighted)'], 
+    bars = ax.bar(['Raw Historical Data\n(Baseline)', 'Modified Data\n(H3 Down-weighted)'], 
                   [main_rate, h3_rate], color=['#2c3e50', '#e74c3c'])
     
     ax.set_ylabel('Predictive Accuracy (%)')
-    ax.set_title('Real-World Test Accuracy: Impact of Modifying Data')
+    ax.set_title('Overall Classification Accuracy: Raw Baseline vs. Modified Data')
     ax.set_ylim(35, 41)
     
     for bar in bars:
@@ -35,14 +35,14 @@ def plot_conflict_splits(df, out_dir):
     splits = df[(df['set'].isin(['conflict_prone', 'consistent'])) & (df['level'] == 8) & (df['metric'] == 'M2_top1')].copy()
     splits['rate'] = splits['rate'] * 100
     splits['set'] = splits['set'].map({'conflict_prone': 'Products with Past\nLabel Conflicts', 'consistent': 'Products with\nConsistent Labels'})
-    splits['model'] = splits['model'].map({'main': 'Raw Historical Data', 'main_h3': 'Modified Data (Down-weighted)'})
+    splits['model'] = splits['model'].map({'main': 'Raw Historical Data', 'main_h3': 'Modified Data (H3 Down-weighted)'})
 
     fig, ax = plt.subplots(figsize=(9, 6))
     sns.barplot(data=splits, x='set', y='rate', hue='model', palette=['#2c3e50', '#e74c3c'], ax=ax)
     
     ax.set_ylabel('Predictive Accuracy (%)')
     ax.set_xlabel('Product History Type')
-    ax.set_title('Model Performance: Conflict-Prone vs. Consistent Data')
+    ax.set_title('Model Performance on Conflicting vs. Consistent Declarations')
     ax.set_ylim(35, 45)
     
     for container in ax.containers:
